@@ -2,7 +2,7 @@
 #' @importFrom graphics abline arrows legend points
 #' @importFrom utils head
 #' @importFrom ggplot2 ggplot geom_point geom_contour labs theme_minimal aes
-#' @importFrom ggplot2 geom_line geom_errorbar geom_vline scale_x_log10 scale_color_manual theme
+#' @importFrom ggplot2 geom_line geom_errorbar geom_vline scale_x_log10 scale_color_manual theme scale_y_continuous
 #' @importFrom fastDummies dummy_cols
 #' @importFrom kernlab rbfdot polydot laplacedot kernelMatrix
 #' @importFrom pracma pinv

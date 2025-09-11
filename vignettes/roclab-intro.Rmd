@@ -63,9 +63,11 @@ X_test_lin <- rbind(
 y_test_lin <- c(rep(-1, n_neg_test_lin), rep(1, n_pos_test_lin))
 
 # Predict
-pred_class_lin <- predict(fit_lin, X_test_lin, type = "response")
-pred_score_lin <- predict(fit_lin, X_test_lin, type = "class")
+pred_score_lin <- predict(fit_lin, X_test_lin, type = "response")
+head(pred_score_lin)
 
+pred_class_lin <- predict(fit_lin, X_test_lin, type = "class")
+head(pred_class_lin)
 # AUC
 auc(fit_lin, X_test_lin, y_test_lin)
 ```
@@ -98,8 +100,11 @@ X_test_ker <- cbind(r_test_ker * cos(theta_test_ker), r_test_ker * sin(theta_tes
 y_test_ker <- ifelse(r_test_ker < 0.5, 1, -1)
 
 # Predict
-scores_ker <- predict(fit_ker, X_test_ker, type = "response")
-classes_ker <- predict(fit_ker, X_test_ker, type = "class")
+pred_score_ker <- predict(fit_ker, X_test_ker, type = "response")
+head(pred_score_ker)
+
+pred_class_ker <- predict(fit_ker, X_test_ker, type = "class")
+head(pred_class_ker)
 
 # AUC
 auc(fit_ker, X_test_ker, y_test_ker)
@@ -115,7 +120,7 @@ plot(fit_ker, newdata = X_test_ker, y = y_test_ker, features = c(1, 2))
 # Linear CV
 cvfit_lin <- cv.roclearn(
   X_train_lin, y_train_lin,
-  lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
   nfolds = 5
 )
 
@@ -131,7 +136,7 @@ plot(cvfit_lin)
 # Kernel CV
 cvfit_ker <- cv.kroclearn(
   X_train_ker, y_train_ker,
-  lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
   kernel = "radial",
   nfolds = 5
 )

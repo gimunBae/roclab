@@ -38,7 +38,7 @@ if (getRversion() >= "2.15.1") {
 #'
 #' cvfit <- cv.kroclearn(
 #'   X, y,
-#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
+#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
 #'   kernel = "radial",
 #'   nfolds = 5
 #' )
@@ -58,16 +58,21 @@ plot.cv.kroclearn <- function(x, highlight = TRUE, ...) {
   df <- data.frame(
     lambda = lambda,
     auc.mean = auc.mean,
-    lower = auc.mean - auc.sd,
-    upper = auc.mean + auc.sd
+    lower = pmax(auc.mean - auc.sd, 0),
+    upper = pmin(auc.mean + auc.sd, 1)
   )
-
+  if (min(df$lower) < 0.5) {
+    ylimits <- c(0, 1)
+  } else {
+    ylimits <- c(0.5, 1)
+  }
   p <- ggplot(df, aes(x = lambda, y = auc.mean)) +
     geom_line(aes(color = "Mean AUC")) +
     geom_point(aes(color = "Mean AUC")) +
     geom_errorbar(aes(ymin = lower, ymax = upper, color = "SD"),
                   width = 0.05) +
     scale_x_log10() +
+    ggplot2::scale_y_continuous(limits = ylimits) +
     labs(
       title = expression("Cross-validated AUC vs " * lambda),
       x = expression(log(lambda)),
@@ -89,7 +94,7 @@ plot.cv.kroclearn <- function(x, highlight = TRUE, ...) {
     scale_color_manual(
       values = c("Mean AUC" = "blue", "SD" = "gray40","Optimal lambda" = "red")
     ) +
-    theme(legend.position = "right")
+    theme(legend.position = "none")
 
   print(p)
 }

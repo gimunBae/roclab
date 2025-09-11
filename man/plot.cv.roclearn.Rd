@@ -47,7 +47,7 @@ X <- rbind(
 y <- c(rep(-1, n_neg), rep(1, n_pos))
 
 cvfit <- cv.roclearn(
-  X, y,lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),nfolds=5)
+  X, y,lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),nfolds=5)
 
 # Plot CV curve with highlighted optimal lambda
 plot(cvfit)
