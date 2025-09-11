@@ -1,0 +1,42 @@
+Package: roclab
+Title: AUC Maximization with Linear and Kernel Models
+Version: 0.0.0.9000
+Authors@R: 
+    c(
+      person("Gimun", "Bae", 
+             email = "qorlans5517@naver.com", 
+             role = c("aut", "cre")),
+      person("Seung Jun", "Shin", 
+             email = "sjshin@korea.ac.kr", 
+             role = "aut")
+    )
+Description: Implements direct AUC maximization in binary 
+    classification, supporting both linear and kernel models. Both types of 
+    models allow different loss functions, with linear models offering various 
+    regularization penalties and kernel models supporting a range of kernel 
+    functions. Optimization uses Adamax-type gradient descent, with scalability 
+    achieved by training on sampled pairs (linear and kernel) and by Nystrom 
+    approximation (kernel). These techniques accelerate training and make fitting 
+    feasible on large, imbalanced datasets. Utilities are provided for model 
+    fitting, prediction, cross-validation, and visualization of decision boundaries.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports:
+    stats,
+    graphics,
+    utils,
+    ggplot2,
+    fastDummies,
+    kernlab,
+    pracma,
+    rsample,
+    dplyr,
+    caret
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
