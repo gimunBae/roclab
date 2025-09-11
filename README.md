@@ -72,7 +72,7 @@ plot(fit_lin, newdata = X_test_lin, y = y_test_lin, features = c(1, 2))
 # 5-fold CV (lambda.vec fixed; nfolds last)
 cvfit_lin <- cv.roclearn(
   X_train_lin, y_train_lin,
-  lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
   nfolds = 5
 )
 
@@ -116,7 +116,7 @@ plot(fit_ker, newdata = X_test_ker, y = y_test_ker, features = c(1, 2))
 # 5-fold CV (lambda.vec fixed; nfolds last)
 cvfit_ker <- cv.kroclearn(
   X_train_ker, y_train_ker,
-  lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
   kernel = "radial",
   nfolds = 5
 )
