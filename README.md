@@ -1,6 +1,7 @@
 # roclab
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/gimunBae/roclab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gimunBae/roclab/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 An R package for **direct AUC maximization** in binary classification.  
