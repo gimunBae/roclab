@@ -428,7 +428,7 @@ GD.nonlinear <- function(K0,K.ij,lambda,loss,theta.init,maxiter,eps) {
     warning("Algorithm did not converge.")
     new.theta <- NA
   }
-  return(list(theta.hat=new.theta,iter=iter))
+  return(list(theta.hat=new.theta,converged = iter < maxiter, n.iter = iter))
 }
 
 
@@ -463,5 +463,5 @@ GD.nystrom <- function(Phi.ij,lambda,loss,theta.init,maxiter,eps) {
     warning("Algorithm did not converge.")
     new.theta <- NA
   }
-  return(list(theta.hat=new.theta,iter=iter))
+  return(list(theta.hat=new.theta,converged = iter < maxiter, n.iter = iter))
 }
