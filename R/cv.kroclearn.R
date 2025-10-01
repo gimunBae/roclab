@@ -279,7 +279,7 @@ cv.kroclearn <- function(
           param.convergence = list(maxiter=maxiter, eps=eps)
         )
         if (all(is.na(fit$theta.hat))){
-          diverge.lambda <- c(diverge.lambda, lambda)
+          diverge.lambda <- c(diverge.lambda, lam)
           time.vec[j] <- NA
           auc.vec[j]  <- NA
         } else{

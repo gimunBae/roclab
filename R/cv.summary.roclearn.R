@@ -79,13 +79,20 @@ summary.cv.roclearn <- function(object, ...) {
     auc.sd   = round(object$auc.sd, 4)
   )
   # filter out rows where auc.mean == 0 or NA
-  n.remove <- sum(is.na(auc.summary$auc.mean) | auc.summary$auc.mean == 0)
-  if (n.remove > 0) {
-    auc.summary <- subset(auc.summary, !is.na(auc.mean) & auc.mean != 0)
-    cat("Note:", n.remove, "lambda value(s) were excluded ",
-        "(due to NA or zero AUC, indicating non-convergence).\n\n")
-  }
+  n.na  <- sum(is.na(auc.summary$auc.mean))
+  n.zero <- sum(auc.summary$auc.mean == 0, na.rm = TRUE)
 
+  if (n.na + n.zero > 0) {
+    auc.summary <- auc.summary[!is.na(auc.summary$auc.mean) & auc.summary$auc.mean != 0, ]
+
+    if (n.na > 0) {
+      cat("Note:", n.na, "lambda value(s) were excluded (NA AUC).\n")
+    }
+    if (n.zero > 0) {
+      cat("Note:", n.zero, "lambda value(s) were excluded (zero AUC).\n")
+    }
+    cat("\n")
+  }
   print(utils::head(auc.summary, 10))
   if (length(object$lambda.vec) > 10) cat("...\n")
 

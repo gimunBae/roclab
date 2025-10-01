@@ -404,6 +404,7 @@ GD.nonlinear <- function(K0,K.ij,lambda,loss,theta.init,maxiter,eps) {
   alpha0 <- 0.002
   beta1 <- 0.9
   beta2 <- 0.999
+  p <- length(theta.init)
   n <- ncol(K0)
   theta <- theta.init
   while(iter < maxiter){
@@ -440,6 +441,7 @@ GD.nystrom <- function(Phi.ij,lambda,loss,theta.init,maxiter,eps) {
   alpha0 <- 0.002
   beta1 <- 0.9
   beta2 <- 0.999
+  p <- length(theta.init)
   theta <- theta.init
   while(iter < maxiter){
     iter <- iter+1
