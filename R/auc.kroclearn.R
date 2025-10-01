@@ -25,7 +25,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(123)
 #'
 #' # Training data (nonlinear, circular decision boundary)

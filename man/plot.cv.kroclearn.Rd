@@ -33,7 +33,7 @@ represents mean AUC values. Error bars show variability across folds.
 This is the kernel counterpart of \code{plot.cv.roclearn}.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 
 ## Simulated nonlinear (circular) classification

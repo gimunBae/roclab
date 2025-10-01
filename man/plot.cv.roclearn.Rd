@@ -32,7 +32,7 @@ The x-axis is displayed on a log scale for \eqn{\lambda}, and the y-axis
 represents mean AUC values. Error bars show variability across folds.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 
 ## Simulated linear classification

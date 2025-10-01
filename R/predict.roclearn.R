@@ -22,7 +22,7 @@
 #' @seealso \code{\link{roclearn}}, \code{\link{cv.roclearn}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(123)
 #' n <- 1500
 #' n_pos <- round(0.2 * n)

@@ -14,7 +14,7 @@
 #'   \code{\link{cv.kroclearn}}, \code{\link{cv.roclearn}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(123)
 #' n <- 1500
 #' r <- sqrt(runif(n, 0.05, 1))

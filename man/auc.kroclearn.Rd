@@ -36,7 +36,7 @@ The intercept, if present, does not affect AUC since only relative score
 differences matter.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 
 # Training data (nonlinear, circular decision boundary)

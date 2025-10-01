@@ -32,7 +32,7 @@ The intercept term, if present, does not affect the AUC because only score
 differences between positive and negative samples matter.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 
 # Training data (linear classification example)

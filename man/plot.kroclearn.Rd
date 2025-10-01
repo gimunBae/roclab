@@ -41,7 +41,7 @@ on the chosen feature pair. The selected features must therefore be chosen
 carefully to obtain a meaningful boundary.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 n <- 1500
 r <- sqrt(runif(n, 0.05, 1))

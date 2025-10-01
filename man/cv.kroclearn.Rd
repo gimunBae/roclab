@@ -82,7 +82,7 @@ Perform k-fold cross-validation over a sequence of \eqn{\lambda} values
 and select the optimal kernel model based on cross-validated AUC.
 }
 \examples{
-\dontrun{
+\donttest{
 ## Kernel model example
 set.seed(123)
 n <- 1500

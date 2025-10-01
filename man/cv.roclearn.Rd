@@ -80,7 +80,7 @@ Perform k-fold cross-validation over a sequence of \eqn{\lambda} values
 and select the optimal linear model based on cross-validated AUC.
 }
 \examples{
-\dontrun{
+\donttest{
 ## Linear model example
 set.seed(123)
 n <- 1500

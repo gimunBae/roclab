@@ -26,7 +26,7 @@ if (getRversion() >= "2.15.1") {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(123)
 #'
 #' ## Simulated nonlinear (circular) classification

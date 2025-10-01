@@ -32,7 +32,7 @@ after applying the same preprocessing steps (dummy encoding, column alignment,
 and column removal) as during training.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 n <- 1500
 n_pos <- round(0.2 * n)

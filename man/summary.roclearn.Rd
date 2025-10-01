@@ -20,7 +20,7 @@ data dimensions, model specification, convergence status, training time,
 and leading coefficient estimates.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 n <- 1500
 n_pos <- round(0.2 * n)

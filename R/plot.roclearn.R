@@ -34,7 +34,7 @@ if (getRversion() >= "2.15.1") {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(123)
 #' n <- 1500
 #' n_pos <- round(0.2 * n)

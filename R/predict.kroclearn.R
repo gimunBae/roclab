@@ -22,7 +22,7 @@
 #' @seealso \code{\link{kroclearn}}, \code{\link{cv.kroclearn}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(123)
 #' n <- 1500
 #' r <- sqrt(runif(n, 0.05, 1))

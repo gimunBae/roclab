@@ -31,7 +31,7 @@ deviation of cross-validated AUC, and a truncated table of AUC results
 across candidate \eqn{\lambda} values.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 
 ## Kernel model cross-validation

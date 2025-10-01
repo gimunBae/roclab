@@ -41,7 +41,7 @@ on the chosen feature pair. The selected features must therefore be chosen
 carefully to obtain a meaningful boundary.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 n <- 1500
 n_pos <- round(0.2 * n)

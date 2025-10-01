@@ -50,7 +50,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## Kernel model example
 #' set.seed(123)
 #' n <- 1500

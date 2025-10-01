@@ -78,7 +78,7 @@ For large datasets, the algorithm can speed up training by using only a sampled 
 positive–negative pairs (incomplete U-statistic approximation).
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(123)
 n <- 1500
 n_pos <- round(0.2 * n)

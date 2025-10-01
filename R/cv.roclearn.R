@@ -48,7 +48,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## Linear model example
 #' set.seed(123)
 #' n <- 1500
