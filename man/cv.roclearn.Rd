@@ -37,8 +37,9 @@ a decreasing sequence is generated automatically.}
 
 \item{param.penalty}{Penalty-specific parameter:
 \itemize{
-\item Ignored for \code{"ridge"}, \code{"lasso"}, and \code{"alasso"}.
+\item Ignored for \code{"ridge"} and \code{"lasso"}.
 \item Mixing parameter \eqn{\alpha \in (0,1)} for \code{"elastic"}. Default is 0.5.
+\item Adaptive weight exponent \eqn{\gamma > 0} for \code{"alasso"}. Default is 1.
 \item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
 }}
 

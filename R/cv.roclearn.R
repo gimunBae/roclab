@@ -15,8 +15,9 @@
 #'   \code{"elastic"}, \code{"alasso"}, \code{"scad"}, or \code{"mcp"}.
 #' @param param.penalty Penalty-specific parameter:
 #'   \itemize{
-#'     \item Ignored for \code{"ridge"}, \code{"lasso"}, and \code{"alasso"}.
+#'     \item Ignored for \code{"ridge"} and \code{"lasso"}.
 #'     \item Mixing parameter \eqn{\alpha \in (0,1)} for \code{"elastic"}. Default is 0.5.
+#'     \item Adaptive weight exponent \eqn{\gamma > 0} for \code{"alasso"}. Default is 1.
 #'     \item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
 #'   }
 #' @param loss Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
@@ -201,11 +202,16 @@ cv.roclearn <- function(
   loss <- match.arg(loss, c("hinge", "logistic", "exponential", "hinge2"))
 
   # --- Penalty-specific parameter handling
-  if (penalty %in% c("ridge", "lasso","alasso")) {
+  if (penalty %in% c("ridge", "lasso")) {
     if (!is.null(param.penalty))
       warning(sprintf("param.penalty is ignored for penalty = '%s'.", penalty), call. = FALSE)
     param.penalty <- NULL
-  } else if (penalty == "elastic") {
+  }  else if (penalty == "alasso") {
+    if (is.null(param.penalty)) param.penalty <- 1
+    if (!is.numeric(param.penalty) || length(param.penalty) != 1L ||
+        !is.finite(param.penalty) || param.penalty <= 0)
+      stop("For 'alasso', param.penalty must be a positive finite numeric scalar", call. = FALSE)
+  }else if (penalty == "elastic") {
     if (is.null(param.penalty)) param.penalty <- 0.5
     if (!is.numeric(param.penalty) || length(param.penalty) != 1L ||
         !is.finite(param.penalty) || param.penalty <= 0 || param.penalty >= 1)
