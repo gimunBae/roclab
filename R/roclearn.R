@@ -23,26 +23,27 @@ NULL
 #'   factors/characters are coerced automatically.
 #' @param lambda Positive scalar regularization parameter.
 #' @param penalty Regularization penalty type:
-#'   \code{"ridge"}, \code{"lasso"}, \code{"elastic"},
+#'   \code{"ridge"} (default), \code{"lasso"}, \code{"elastic"},
 #'   \code{"alasso"}, \code{"scad"}, or \code{"mcp"}.
 #' @param param.penalty Penalty-specific parameter:
 #'   \itemize{
 #'     \item Ignored for \code{"ridge"}, \code{"lasso"}, and \code{"alasso"}.
-#'     \item Mixing parameter \eqn{\alpha \in (0,1)} for \code{"elastic"}.
+#'     \item Mixing parameter \eqn{\alpha \in (0,1)} for \code{"elastic"}. Default is 0.5.
 #'     \item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
 #'   }
 #' @param loss Loss function:
-#'   \code{"hinge"}, \code{"hinge2"} (squared hinge), \code{"logistic"},
+#'   \code{"hinge"} (default), \code{"hinge2"} (squared hinge), \code{"logistic"},
 #'   or \code{"exponential"}.
 #' @param approx Logical; if \code{TRUE}, train the linear model using
 #'   a subsampled set of positive–negative pairs (incomplete U-statistic).
 #'   This substantially reduces computational cost for large datasets.
-#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}.
+#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.
 #' @param intercept Logical; if \code{TRUE}, estimate an intercept term
 #'   (default \code{TRUE}).
 #' @param target.perf List with target sensitivity and specificity used when
 #'   estimating the intercept (defaults to 0.9 each).
-#' @param param.convergence List of convergence controls (\code{maxiter}, \code{eps}).
+#' @param param.convergence List of convergence controls (e.g., \code{maxiter},
+#'   \code{eps}). Default is \code{list(maxiter = 5e4, eps = 1e-4)}.
 #'
 #' @return An object of class \code{"roclearn"}, a list containing:
 #'   \itemize{
@@ -152,6 +153,21 @@ roclearn <- function(
     }
   }
 
+  # --- drop constant (zero-variance) columns
+  removed.cols <- character(0)
+  if (ncol(X) > 0L) {
+    const.idx <- vapply(seq_len(ncol(X)),
+                        function(j) all(X[, j] == X[1, j]),
+                        logical(1))
+    if (any(const.idx)) {
+      removed.cols <- colnames(X)[const.idx]
+      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")), call. = FALSE)
+      X <- X[, !const.idx, drop = FALSE]
+    }
+  }
+  if (ncol(X) == 0L)
+    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
+
   # --- detect categoricals and one-hot encode (remove first level)
   cat.vars <- character(0)
   if (is.data.frame(X)) {
@@ -177,20 +193,7 @@ roclearn <- function(
   if (any(!is.finite(X)))
     stop("X contains non-finite values after encoding.", call. = FALSE)
 
-  # --- drop constant (zero-variance) columns
-  removed.cols <- character(0)
-  if (ncol(X) > 0L) {
-    const.idx <- vapply(seq_len(ncol(X)),
-                        function(j) all(X[, j] == X[1, j]),
-                        logical(1))
-    if (any(const.idx)) {
-      removed.cols <- colnames(X)[const.idx]
-      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")), call. = FALSE)
-      X <- X[, !const.idx, drop = FALSE]
-    }
-  }
-  if (ncol(X) == 0L)
-    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
+
 
   # --- approx flag
   if (is.null(approx)) approx <- nrow(X) >= 1000L

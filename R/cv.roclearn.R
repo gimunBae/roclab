@@ -7,25 +7,30 @@
 #'   automatically one-hot encoded).
 #' @param y Response vector with class labels in \{-1, 1\}. Labels given as
 #'   \{0,1\} or as a two-level factor/character are coerced automatically.
-#' @param lambda.vec Optional numeric vector of penalty values. If \code{NULL},
+#' @param lambda.vec Optional numeric vector of penalty values. If \code{NULL} (default),
 #'   a decreasing sequence is generated automatically.
 #' @param lambda.length Number of \eqn{\lambda} values to generate if
-#'   \code{lambda.vec} is \code{NULL}.
-#' @param penalty Regularization penalty type: \code{"ridge"}, \code{"lasso"},
+#'   \code{lambda.vec} is \code{NULL}. Default is 30.
+#' @param penalty Regularization penalty type: \code{"ridge"} (default), \code{"lasso"},
 #'   \code{"elastic"}, \code{"alasso"}, \code{"scad"}, or \code{"mcp"}.
-#' @param param.penalty Penalty-specific parameter (ignored for ridge/lasso/alasso).
-#' @param loss Loss function: \code{"hinge"}, \code{"hinge2"} (squared hinge),
+#' @param param.penalty Penalty-specific parameter:
+#'   \itemize{
+#'     \item Ignored for \code{"ridge"}, \code{"lasso"}, and \code{"alasso"}.
+#'     \item Mixing parameter \eqn{\alpha \in (0,1)} for \code{"elastic"}. Default is 0.5.
+#'     \item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
+#'   }
+#' @param loss Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 #'   \code{"logistic"}, or \code{"exponential"}.
 #' @param approx Logical; if \code{TRUE}, train the linear model using
 #'   a subsampled set of positive–negative pairs (incomplete U-statistic).
 #'   This substantially reduces computational cost for large datasets.
-#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}.
+#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.
 #' @param intercept Logical; include an intercept in the model (default \code{TRUE}).
 #' @param nfolds Number of cross-validation folds (default 10).
-#' @param target.perf List of target performance criteria (passed to
-#'   \code{roclearn}).
+#' @param target.perf List with target sensitivity and specificity used when
+#'   estimating the intercept (defaults to 0.9 each).
 #' @param param.convergence List of convergence controls (e.g., \code{maxiter},
-#'   \code{eps}).
+#'   \code{eps}). Default is \code{list(maxiter = 5e4, eps = 1e-4)}.
 #'
 #' @return An object of class \code{"cv.roclearn"} with:
 #'   \itemize{
@@ -65,7 +70,7 @@
 cv.roclearn <- function(
     X, y,
     lambda.vec= NULL,
-    lambda.length = 50,
+    lambda.length = 30,
     penalty = "ridge",
     param.penalty = NULL,
     loss = "hinge",
@@ -141,6 +146,19 @@ cv.roclearn <- function(
       if (any(!is.finite(X))) stop("X contains non-finite values.", call. = FALSE)
     }
   }
+  # --- Drop constant (zero-variance) columns
+  removed.cols <- character(0)
+  if (ncol(X) > 0L) {
+    const.idx <- vapply(seq_len(ncol(X)), function(j) all(X[, j] == X[1, j]), logical(1))
+    if (any(const.idx)) {
+      removed.cols <- colnames(X)[const.idx]
+      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")),
+              call. = FALSE)
+      X <- X[, !const.idx, drop = FALSE]
+    }
+  }
+  if (ncol(X) == 0L)
+    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
 
   # --- Detect categoricals and apply one-hot encoding (remove first dummy)
   cat.vars <- character(0)
@@ -167,19 +185,7 @@ cv.roclearn <- function(
   if (any(!is.finite(X)))
     stop("X contains non-finite values after encoding.", call. = FALSE)
 
-  # --- Drop constant (zero-variance) columns
-  removed.cols <- character(0)
-  if (ncol(X) > 0L) {
-    const.idx <- vapply(seq_len(ncol(X)), function(j) all(X[, j] == X[1, j]), logical(1))
-    if (any(const.idx)) {
-      removed.cols <- colnames(X)[const.idx]
-      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")),
-              call. = FALSE)
-      X <- X[, !const.idx, drop = FALSE]
-    }
-  }
-  if (ncol(X) == 0L)
-    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
+
 
   # --- Approximation flag (default: TRUE if n >= 1000)
   if (is.null(approx)) approx <- nrow(X) >= 1000L

@@ -8,7 +8,7 @@ cv.roclearn(
   X,
   y,
   lambda.vec = NULL,
-  lambda.length = 50,
+  lambda.length = 30,
   penalty = "ridge",
   param.penalty = NULL,
   loss = "hinge",
@@ -26,34 +26,39 @@ automatically one-hot encoded).}
 \item{y}{Response vector with class labels in \{-1, 1\}. Labels given as
 \{0,1\} or as a two-level factor/character are coerced automatically.}
 
-\item{lambda.vec}{Optional numeric vector of penalty values. If \code{NULL},
+\item{lambda.vec}{Optional numeric vector of penalty values. If \code{NULL} (default),
 a decreasing sequence is generated automatically.}
 
 \item{lambda.length}{Number of \eqn{\lambda} values to generate if
-\code{lambda.vec} is \code{NULL}.}
+\code{lambda.vec} is \code{NULL}. Default is 30.}
 
-\item{penalty}{Regularization penalty type: \code{"ridge"}, \code{"lasso"},
+\item{penalty}{Regularization penalty type: \code{"ridge"} (default), \code{"lasso"},
 \code{"elastic"}, \code{"alasso"}, \code{"scad"}, or \code{"mcp"}.}
 
-\item{param.penalty}{Penalty-specific parameter (ignored for ridge/lasso/alasso).}
+\item{param.penalty}{Penalty-specific parameter:
+\itemize{
+\item Ignored for \code{"ridge"}, \code{"lasso"}, and \code{"alasso"}.
+\item Mixing parameter \eqn{\alpha \in (0,1)} for \code{"elastic"}. Default is 0.5.
+\item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
+}}
 
-\item{loss}{Loss function: \code{"hinge"}, \code{"hinge2"} (squared hinge),
+\item{loss}{Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 \code{"logistic"}, or \code{"exponential"}.}
 
 \item{approx}{Logical; if \code{TRUE}, train the linear model using
 a subsampled set of positive–negative pairs (incomplete U-statistic).
 This substantially reduces computational cost for large datasets.
-Default is \code{TRUE} when \code{nrow(X) >= 1000}.}
+Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.}
 
 \item{intercept}{Logical; include an intercept in the model (default \code{TRUE}).}
 
 \item{nfolds}{Number of cross-validation folds (default 10).}
 
-\item{target.perf}{List of target performance criteria (passed to
-\code{roclearn}).}
+\item{target.perf}{List with target sensitivity and specificity used when
+estimating the intercept (defaults to 0.9 each).}
 
 \item{param.convergence}{List of convergence controls (e.g., \code{maxiter},
-\code{eps}).}
+\code{eps}). Default is \code{list(maxiter = 5e4, eps = 1e-4)}.}
 }
 \value{
 An object of class \code{"cv.roclearn"} with:

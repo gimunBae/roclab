@@ -11,26 +11,29 @@
 #' @param y Class labels in \{-1, 1\}. Labels given as \{0,1\} or as two-level
 #'   factors/characters are coerced automatically.
 #' @param lambda Positive scalar regularization parameter.
-#' @param kernel Kernel type: \code{"radial"}, \code{"polynomial"},
+#' @param kernel Kernel type: \code{"radial"} (default), \code{"polynomial"},
 #'   \code{"linear"}, or \code{"laplace"}.
 #' @param param.kernel Kernel-specific parameter:
 #'   \itemize{
-#'     \item \eqn{\sigma} for \code{"radial"} and \code{"laplace"} kernels (default \eqn{1/p}).
+#'     \item \eqn{\sigma} for \code{"radial"} and \code{"laplace"} kernels
+#'       (default \eqn{1/p}, where \eqn{p} is the number of predictors after preprocessing,
+#'       i.e., after categorical variables are one-hot encoded).
 #'     \item Degree for \code{"polynomial"} kernel (default 2).
 #'     \item Ignored for \code{"linear"} kernel.
 #'   }
-#' @param loss Loss function:
-#'   \code{"hinge"}, \code{"hinge2"} (squared hinge),
+#' @param loss Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 #'   \code{"logistic"}, or \code{"exponential"}.
 #' @param approx Logical; if \code{TRUE}, train the kernel model using
 #'   subsampled positive–negative pairs (incomplete U-statistic), and further
 #'   apply a Nyström approximation to the kernel matrix. This reduces memory and
-#'   time cost for large datasets. Default is \code{TRUE} when \code{nrow(X) >= 1000}.
+#'   time cost for large datasets.
+#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.
 #' @param intercept Logical; if \code{TRUE}, estimate an intercept term
 #'   (default \code{TRUE}).
 #' @param target.perf List with target sensitivity and specificity used when
 #'   estimating the intercept (defaults to 0.9 each).
-#' @param param.convergence List of convergence controls (\code{maxiter}, \code{eps}).
+#' @param param.convergence List of convergence controls (e.g., \code{maxiter},
+#'   \code{eps}). Default is \code{list(maxiter = 5e4, eps = 1e-4)}.
 #'
 #' @return An object of class \code{"kroclearn"}, a list containing:
 #'   \itemize{
@@ -138,6 +141,20 @@ kroclearn <- function(
         stop("X contains non-finite values.", call. = FALSE)
     }
   }
+  # --- drop constant (zero-variance) columns
+  removed.cols <- character(0)
+  if (ncol(X) > 0L) {
+    const.idx <- vapply(seq_len(ncol(X)),
+                        function(j) all(X[, j] == X[1, j]),
+                        logical(1))
+    if (any(const.idx)) {
+      removed.cols <- colnames(X)[const.idx]
+      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")), call. = FALSE)
+      X <- X[, !const.idx, drop = FALSE]
+    }
+  }
+  if (ncol(X) == 0L)
+    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
 
   # --- detect categoricals and one-hot encode (remove first level)
   cat.vars <- character(0)
@@ -164,20 +181,7 @@ kroclearn <- function(
   if (any(!is.finite(X)))
     stop("X contains non-finite values after encoding.", call. = FALSE)
 
-  # --- drop constant (zero-variance) columns
-  removed.cols <- character(0)
-  if (ncol(X) > 0L) {
-    const.idx <- vapply(seq_len(ncol(X)),
-                        function(j) all(X[, j] == X[1, j]),
-                        logical(1))
-    if (any(const.idx)) {
-      removed.cols <- colnames(X)[const.idx]
-      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")), call. = FALSE)
-      X <- X[, !const.idx, drop = FALSE]
-    }
-  }
-  if (ncol(X) == 0L)
-    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
+
   n <- nrow(X)
   p <- ncol(X)
   # --- approx flag

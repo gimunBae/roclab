@@ -21,8 +21,7 @@ features (needed if the feature is expanded into multiple dummies).
 \item \code{point_size}: Size of scatter plot points (default 1.8).
 \item \code{point_alpha}: Transparency of scatter points (default 0.8).
 \item \code{others}: How to fix non-selected features when generating
-the grid. One of \code{"zero"}, \code{"mean"}, or \code{"median"}
-(default \code{"zero"}).
+the grid. One of \code{"mean"} (default), or \code{"median"}
 }}
 }
 \value{
@@ -33,6 +32,13 @@ estimated decision boundary.
 Visualize the fitted decision function of a kernel AUC maximization model
 using two selected features. A scatter plot of the observed data is overlaid
 with the decision boundary where \eqn{f(x) = 0}.
+}
+\details{
+Recommended when the dataset has only two features. For datasets with more
+than two features, the plot fixes all non-selected features at baseline
+values (e.g., zero or mean) and shows a 2D slice of the decision boundary
+on the chosen feature pair. The selected features must therefore be chosen
+carefully to obtain a meaningful boundary.
 }
 \examples{
 \dontrun{

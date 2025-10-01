@@ -7,26 +7,33 @@
 #'   automatically one-hot encoded).
 #' @param y Response vector with class labels in \{-1, 1\}. Labels given as
 #'   \{0,1\} or as a two-level factor/character are coerced automatically.
-#' @param lambda.vec Optional numeric vector of penalty values. If \code{NULL},
+#' @param lambda.vec Optional numeric vector of penalty values. If \code{NULL} (default),
 #'   a decreasing sequence is generated automatically.
 #' @param lambda.length Number of \eqn{\lambda} values to generate if
-#'   \code{lambda.vec} is \code{NULL}.
-#' @param kernel Kernel type: \code{"radial"}, \code{"polynomial"},
+#'   \code{lambda.vec} is \code{NULL}. Default is 30.
+#' @param kernel Kernel type: \code{"radial"} (default), \code{"polynomial"},
 #'   \code{"linear"}, or \code{"laplace"}.
-#' @param param.kernel Kernel-specific parameter (e.g., \eqn{\sigma} for
-#'   radial/laplace kernels, polynomial degree).
-#' @param loss Loss function: \code{"hinge"}, \code{"hinge2"} (squared hinge),
+#' @param param.kernel Kernel-specific parameter:
+#'   \itemize{
+#'     \item \eqn{\sigma} for \code{"radial"} and \code{"laplace"} kernels
+#'       (default \eqn{1/p}, where \eqn{p} is the number of predictors after preprocessing,
+#'       i.e., after categorical variables are one-hot encoded).
+#'     \item Degree for \code{"polynomial"} kernel (default 2).
+#'     \item Ignored for \code{"linear"} kernel.
+#'   }
+#' @param loss Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 #'   \code{"logistic"}, or \code{"exponential"}.
 #' @param approx Logical; if \code{TRUE}, train the kernel model using
 #'   subsampled positive–negative pairs (incomplete U-statistic), and further
 #'   apply a Nyström approximation to the kernel matrix. This reduces memory and
-#'   time cost for large datasets. Default is \code{TRUE} when \code{nrow(X) >= 1000}.
+#'   time cost for large datasets.
+#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.
 #' @param intercept Logical; include an intercept in the model (default \code{TRUE}).
 #' @param nfolds Number of cross-validation folds (default 10).
-#' @param target.perf List of target performance criteria (passed to
-#'   \code{kroclearn}, e.g., sensitivity/specificity thresholds).
+#' @param target.perf List with target sensitivity and specificity used when
+#'   estimating the intercept (defaults to 0.9 each).
 #' @param param.convergence List of convergence controls (e.g., \code{maxiter},
-#'   \code{eps}).
+#'   \code{eps}). Default is \code{list(maxiter = 5e4, eps = 1e-4)}.
 #'
 #' @return An object of class \code{"cv.kroclearn"} with:
 #'   \itemize{
@@ -63,7 +70,7 @@
 cv.kroclearn <- function(
     X, y,
     lambda.vec = NULL,
-    lambda.length = 50,
+    lambda.length = 30,
     kernel = "radial",
     param.kernel = NULL,
     loss = "hinge",
@@ -139,6 +146,19 @@ cv.kroclearn <- function(
       if (any(!is.finite(X))) stop("X contains non-finite values.", call. = FALSE)
     }
   }
+  # --- Drop constant (zero-variance) columns
+  removed.cols <- character(0)
+  if (ncol(X) > 0L) {
+    const.idx <- vapply(seq_len(ncol(X)), function(j) all(X[, j] == X[1, j]), logical(1))
+    if (any(const.idx)) {
+      removed.cols <- colnames(X)[const.idx]
+      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")),
+              call. = FALSE)
+      X <- X[, !const.idx, drop = FALSE]
+    }
+  }
+  if (ncol(X) == 0L)
+    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
 
   # --- Detect categoricals and apply one-hot encoding (remove first dummy)
   cat.vars <- character(0)
@@ -165,19 +185,7 @@ cv.kroclearn <- function(
   if (any(!is.finite(X)))
     stop("X contains non-finite values after encoding.", call. = FALSE)
 
-  # --- Drop constant (zero-variance) columns
-  removed.cols <- character(0)
-  if (ncol(X) > 0L) {
-    const.idx <- vapply(seq_len(ncol(X)), function(j) all(X[, j] == X[1, j]), logical(1))
-    if (any(const.idx)) {
-      removed.cols <- colnames(X)[const.idx]
-      warning(sprintf("Removing constant columns: %s", paste(removed.cols, collapse = ", ")),
-              call. = FALSE)
-      X <- X[, !const.idx, drop = FALSE]
-    }
-  }
-  if (ncol(X) == 0L)
-    stop("All predictors were constant or removed; no columns remain in X.", call. = FALSE)
+
   n <- nrow(X)
   p <- ncol(X)
   # --- Approximation flag (default: TRUE if n >= 1000)
@@ -227,7 +235,6 @@ cv.kroclearn <- function(
 
   # --- lambda sequence if not given
   if (is.null(lambda.vec)) {
-    # crude lambda.max by norm bound (TODO: refine if needed)
     lambda.max <- 1
     lambda.min.ratio <- 1e-3
     lambda.vec <- exp(seq(

@@ -56,7 +56,9 @@ predict.kroclearn <- function(object, newdata, type = c("class", "response"), ..
   } else {
     stop("'newdata' must be a matrix or data.frame.", call. = FALSE)
   }
-
+  if (!type %in% c("class", "response")) {
+    stop("`type` must be either 'class' or 'response'.")
+  }
   # Step 1: Apply the same dummy encoding as in training
   cat.vars <- object$preprocessing$cat.vars
   if (is.data.frame(X) && length(cat.vars)) {

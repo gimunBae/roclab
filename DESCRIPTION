@@ -11,14 +11,14 @@ Authors@R:
              role = "aut")
     )
 Description: Implements direct AUC maximization in binary 
-    classification, supporting both linear and kernel models. Both types of 
-    models allow different loss functions, with linear models offering various 
-    regularization penalties and kernel models supporting a range of kernel 
-    functions. Optimization uses Adamax-type gradient descent, with scalability 
-    achieved by training on sampled pairs (linear and kernel) and by Nystrom 
-    approximation (kernel). These techniques accelerate training and make fitting 
-    feasible on large, imbalanced datasets. Utilities are provided for model 
-    fitting, prediction, cross-validation, and visualization of decision boundaries.
+    classification, supporting both linear and kernel-based models. 
+    Both linear and kernel models provide a variety of surrogate loss functions.
+    In addition, linear models offer various regularization penalties, 
+    whereas kernel models support a range of kernel functions. 
+    Scalability for large datasets is achieved by introducing approximation options, 
+    which accelerate training and make fitting feasible on large, imbalanced datasets.
+    Utilities are provided for model fitting, prediction, cross-validation, 
+    and visualization of decision boundaries.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
@@ -35,6 +35,7 @@ Imports:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
+    mlbench,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)

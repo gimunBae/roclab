@@ -26,24 +26,26 @@ factors/characters are coerced automatically.}
 
 \item{lambda}{Positive scalar regularization parameter.}
 
-\item{kernel}{Kernel type: \code{"radial"}, \code{"polynomial"},
+\item{kernel}{Kernel type: \code{"radial"} (default), \code{"polynomial"},
 \code{"linear"}, or \code{"laplace"}.}
 
 \item{param.kernel}{Kernel-specific parameter:
 \itemize{
-\item \eqn{\sigma} for \code{"radial"} and \code{"laplace"} kernels (default \eqn{1/p}).
+\item \eqn{\sigma} for \code{"radial"} and \code{"laplace"} kernels
+(default \eqn{1/p}, where \eqn{p} is the number of predictors after preprocessing,
+i.e., after categorical variables are one-hot encoded).
 \item Degree for \code{"polynomial"} kernel (default 2).
 \item Ignored for \code{"linear"} kernel.
 }}
 
-\item{loss}{Loss function:
-\code{"hinge"}, \code{"hinge2"} (squared hinge),
+\item{loss}{Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 \code{"logistic"}, or \code{"exponential"}.}
 
 \item{approx}{Logical; if \code{TRUE}, train the kernel model using
 subsampled positive–negative pairs (incomplete U-statistic), and further
 apply a Nyström approximation to the kernel matrix. This reduces memory and
-time cost for large datasets. Default is \code{TRUE} when \code{nrow(X) >= 1000}.}
+time cost for large datasets.
+Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.}
 
 \item{intercept}{Logical; if \code{TRUE}, estimate an intercept term
 (default \code{TRUE}).}
@@ -51,7 +53,8 @@ time cost for large datasets. Default is \code{TRUE} when \code{nrow(X) >= 1000}
 \item{target.perf}{List with target sensitivity and specificity used when
 estimating the intercept (defaults to 0.9 each).}
 
-\item{param.convergence}{List of convergence controls (\code{maxiter}, \code{eps}).}
+\item{param.convergence}{List of convergence controls (e.g., \code{maxiter},
+\code{eps}). Default is \code{list(maxiter = 5e4, eps = 1e-4)}.}
 }
 \value{
 An object of class \code{"kroclearn"}, a list containing:

@@ -8,13 +8,18 @@ An R package for **direct AUC maximization** in binary classification.
 It provides both **linear** and **kernel-based** models:  
 
 - **Linear models** support various **regularization penalties** (ridge, lasso, elastic net, etc.).  
-- **Kernel models** allow flexible choices of **kernel functions** (radial, polynomial, linear, laplace).  
-- **Both models** support multiple **loss functions** (hinge, hinge2 (squared hinge), logistic, exponential).  
+- **Kernel models** offer a range of kernel functions (radial, polynomial, linear, laplace).  
+- **Both models** provide a variety of surrogate loss functions (hinge, hinge2 (squared hinge), logistic, exponential).  
 
-Efficient optimization is implemented (e.g., **Adamax gradient descent**).  
-For large datasets, scalability is achieved by  
-using only sampled pairs of positive–negative pairs (**incomplete U-statistics**)  
-and, for kernel models, further applying a **Nyström low-rank approximation** to the kernel matrix.
+Efficient optimization is performed using **Gradient Descent with the Adamax update rule** 
+—a variant of Adam based on the infinity norm—for kernel models and for linear models 
+with the ridge penalty. For linear models with other penalties (i.e., those involving 
+variable selection), **Proximal Gradient Descent with an Adamax adaptive learning rate scheme** is employed.
+  
+For large datasets, scalability is achieved by approximating the empirical loss 
+using **incomplete U-statistics**, and by applying a **Nyström low-rank approximation** 
+to the kernel matrix. These approximations reduce computational cost while 
+preserving accuracy, making AUC maximization feasible in large-scale imbalanced data.
 
 ## Installation
 

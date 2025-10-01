@@ -7,6 +7,12 @@ if (getRversion() >= "2.15.1") {
 #' using two selected features. A scatter plot of the observed data is overlaid
 #' with the decision boundary where \eqn{f(x) = 0}.
 #'
+#' Recommended when the dataset has only two features. For datasets with more
+#' than two features, the plot fixes all non-selected features at baseline
+#' values (e.g., zero or mean) and shows a 2D slice of the decision boundary
+#' on the chosen feature pair. The selected features must therefore be chosen
+#' carefully to obtain a meaningful boundary.
+#'
 #' @param x A fitted model object of class \code{"roclearn"} (linear).
 #' @param ... Additional arguments passed as a list:
 #'   \itemize{
@@ -20,8 +26,7 @@ if (getRversion() >= "2.15.1") {
 #'     \item \code{point_size}: Size of scatter plot points (default 1.8).
 #'     \item \code{point_alpha}: Transparency of scatter points (default 0.8).
 #'     \item \code{others}: How to fix non-selected features when generating
-#'       the grid. One of \code{"zero"}, \code{"mean"}, or \code{"median"}
-#'       (default \code{"zero"}).
+#'       the grid. One of \code{"mean"} (default), or \code{"median"}
 #'   }
 #'
 #' @return A \code{ggplot2} object showing the training data points and the
@@ -55,8 +60,8 @@ plot.roclearn <- function(x, ...) {
   grid_points<- args$grid_points %||% 200
   point_size <- args$point_size %||% 1.8
   point_alpha<- args$point_alpha %||% 0.8
-  others     <- args$others %||% "zero"
-  others <- match.arg(others,c("zero","mean","median"))
+  others     <- args$others %||% "mean"
+  others <- match.arg(others,c("mean","median"))
   # --- Basic checks ---
   if (!inherits(object, "roclearn"))
     stop("object must be of class 'roclearn'.", call. = FALSE)
@@ -176,17 +181,11 @@ plot.roclearn <- function(x, ...) {
   f1_name <- cn_final[j1]; f2_name <- cn_final[j2]
 
   # --- Baseline for non-selected features ---
-  if (others != "zero") {
-    # compute per-column baseline on observed X (post-preproc)
-    if (others == "mean") {
-      base_vec <- colMeans(X)
-    } else {
-      base_vec <- apply(X, 2, stats::median)
-    }
+  if (others == "mean") {
+    base_vec <- colMeans(X)
   } else {
-    base_vec <- rep(0, ncol(X))
+    base_vec <- apply(X, 2, stats::median)
   }
-
   # --- Scatter data (observed) ---
   df_test <- data.frame(
     X1 = X[, j1],
@@ -209,23 +208,48 @@ plot.roclearn <- function(x, ...) {
   fval <- drop(G %*% beta) + intercept
   grid$fval <- fval
 
-  # --- Plot ---
   if (!requireNamespace("ggplot2", quietly = TRUE))
     stop("Package 'ggplot2' is required.", call. = FALSE)
-  ggplot2::ggplot() +
+
+  p <-  ggplot2::ggplot() +
     ggplot2::geom_point(
       data = df_test,
       ggplot2::aes(x = X1, y = X2, color = y),
       size = point_size, alpha = point_alpha
     ) +
-    ggplot2::geom_contour(
-      data = grid,
-      ggplot2::aes(x = X1, y = X2, z = fval),
-      breaks = 0, color = "black", linewidth = 1
-    ) +
     ggplot2::labs(
-      title = "ROC-LEARN Decision Function (f(x)=0 boundary)",
+      title = paste("Kernel ROC-LEARN (", object$kernel, ")", sep = ""),
       x = f1_name, y = f2_name, color = "Class"
     ) +
     ggplot2::theme_minimal()
+
+  # Try adding the decision boundary
+  contour_added <- FALSE
+  tryCatch({
+    # Attempt to draw the contour line at f(x) = 0
+    p <- p + ggplot2::geom_contour(
+      data = grid,
+      ggplot2::aes(x = X1, y = X2, z = fval),
+      breaks = 0, color = "black", linewidth = 1
+    )
+    contour_added <- TRUE
+  }, warning = function(w) {
+    # If the warning indicates that no contour could be generated
+    if (grepl("Zero contours were generated", conditionMessage(w))) {
+      warning("The selected feature combination cannot properly represent the decision boundary. Please try different features.", call. = FALSE)
+    } else {
+      # Forward any other warnings as-is
+      warning(conditionMessage(w), call. = FALSE)
+    }
+  }, error = function(e) {
+    # Handle unexpected errors during contour computation
+    warning("The selected feature combination cannot properly represent the decision boundary. Please try different features.", call. = FALSE)
+  })
+
+  # If no contour was added, return scatter plot only
+  if (!contour_added) {
+    return(p)
+  }
+
+  p
 }

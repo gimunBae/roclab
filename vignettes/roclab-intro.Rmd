@@ -19,19 +19,26 @@ library(roclab)
 ```
 
 # Overview
-The **roclab** package provides an implementation of direct AUC maximization
-for binary classification, supporting both linear and kernel-based models.
 
-- Linear models allow different regularization penalties (ridge, lasso, elastic net, etc.).
+The **roclab** package implements direct AUC maximization for binary classification, 
+supporting both linear and kernel-based models.
 
-- Kernel models allow flexible kernel functions (radial, polynomial, linear, laplace).
+- **Linear models** provide various regularization penalties (ridge, lasso, elastic net, etc.).  
+- **Kernel models** support flexible kernel functions (radial, polynomial, linear, laplace).  
+- **Both models** include several surrogate loss functions (hinge, hinge2 (squared hinge), logistic, exponential).
 
-- Both models support multiple loss functions (hinge, hinge2 (squared hinge), logistic, exponential).
+Efficient optimization is performed using **Gradient Descent with the Adamax update rule** 
+—a variant of Adam based on the infinity norm—for kernel models and for linear models 
+with the ridge penalty. For linear models with other penalties (i.e., those involving variable selection), 
+**Proximal Gradient Descent with an Adamax adaptive learning rate scheme** is employed.
 
-Efficient optimization is implemented (e.g., **Adamax gradient descent**).  
-For large datasets, scalability is achieved by  
-using only sampled pairs of positive–negative pairs (**incomplete U-statistics**)  
-and, for kernel models, further applying a **Nyström low-rank approximation** to the kernel matrix.
+To address the scalability challenge of AUC maximization, the package adopts 
+**incomplete U-statistics**, which approximate the empirical loss through a subset 
+of positive–negative pairs. In kernel models, a **Nyström low-rank approximation** 
+is further applied to the kernel matrix. These approximations substantially reduce computational cost 
+and accelerate training, while maintaining accuracy, making AUC maximization practical for large-scale, 
+imbalanced datasets.
+
 
 # Example: Linear Model
 ```{r}
@@ -77,6 +84,7 @@ auc(fit_lin, X_test_lin, y_test_lin)
 plot(fit_lin, newdata = X_test_lin, y = y_test_lin, features = c(1, 2))
 ```
 
+
 # Example: Kernel Model
 ```{r}
 set.seed(123)
@@ -115,6 +123,7 @@ auc(fit_ker, X_test_ker, y_test_ker)
 plot(fit_ker, newdata = X_test_ker, y = y_test_ker, features = c(1, 2))
 ```
 
+
 # Cross-Validation
 ```{r}
 # Linear CV
@@ -132,6 +141,7 @@ summary(cvfit_lin)
 # Plot the cross-validation AUC curve across lambda values
 plot(cvfit_lin)
 ```
+
 ```{r}
 # Kernel CV
 cvfit_ker <- cv.kroclearn(
@@ -150,8 +160,173 @@ summary(cvfit_ker)
 plot(cvfit_ker)
 ```
 
+
+# Real Data Example 1: Ionosphere
+```{r}
+library(mlbench)
+data(Ionosphere)
+
+# Prepare data
+X_iono <- Ionosphere[, -35]
+y_iono <- ifelse(Ionosphere$Class == "bad", 1, -1)
+
+set.seed(123)
+train_idx <- sample(seq_len(nrow(X_iono)), size = 200)
+X_train_iono <- X_iono[train_idx, ]
+y_train_iono <- y_iono[train_idx]
+X_test_iono  <- X_iono[-train_idx, ]
+y_test_iono  <- y_iono[-train_idx]
+
+# ---- Linear Model ----
+fit_iono_lin <- roclearn(X_train_iono, y_train_iono, lambda = 0.1, approx=TRUE)
+summary(fit_iono_lin)
+
+# Predict
+pred_score_iono_lin <- predict(fit_iono_lin, X_test_iono, type = "response")
+head(pred_score_iono_lin)
+
+pred_class_iono_lin <- predict(fit_iono_lin, X_test_iono, type = "class")
+head(pred_class_iono_lin)
+
+# AUC
+auc(fit_iono_lin, X_test_iono, y_test_iono)
+```
+
+```{r, fig.width=7, fig.height=6}
+# Plot decision boundary
+plot(fit_iono_lin, newdata = X_test_iono, y = y_test_iono, features = c(3, 5))
+```
+
+```{r}
+# Cross-Validation (Linear) with default lambda sequence
+# (uses the automatically generated decreasing lambda.vec)
+cvfit_iono_lin <- cv.roclearn(
+  X_train_iono, y_train_iono,
+  approx=TRUE, nfolds=5)
+summary(cvfit_iono_lin)
+```
+
+```{r, fig.width=7, fig.height=6}
+# Plot the cross-validation AUC curve across lambda values
+plot(cvfit_iono_lin)
+```
+
+```{r}
+# ---- Kernel Model ----
+fit_iono_ker <- kroclearn(X_train_iono, y_train_iono, lambda = 0.1, kernel = "radial", approx=TRUE)
+summary(fit_iono_ker)
+
+# Predict
+pred_score_iono_ker <- predict(fit_iono_ker, X_test_iono, type = "response")
+head(pred_score_iono_ker)
+
+pred_class_iono_ker <- predict(fit_iono_ker, X_test_iono, type = "class")
+head(pred_class_iono_ker)
+
+# AUC
+auc(fit_iono_ker, X_test_iono, y_test_iono)
+```
+
+```{r, fig.width=7, fig.height=6}
+# Plot decision boundary
+plot(fit_iono_ker, newdata = X_test_iono, y = y_test_iono, features = c(3, 5), others="median")
+```
+
+```{r}
+# Cross-Validation (Kernel) with default lambda sequence
+# (uses the automatically generated decreasing lambda.vec)
+cvfit_iono_ker <- cv.kroclearn(
+  X_train_iono, y_train_iono,
+  kernel = "radial",
+  approx=TRUE, nfolds=5)
+summary(cvfit_iono_ker)
+```
+
+```{r, fig.width=7, fig.height=6}
+# Plot the cross-validation AUC curve across lambda values
+plot(cvfit_iono_ker)
+```
+
+
+# Real Data Example 2: Spam (larger dataset) 
+```{r}
+library(kernlab)
+data(spam)
+
+# Prepare data
+X_spam <- spam[, -58]
+y_spam <- ifelse(spam$type == "spam", 1, -1)
+
+set.seed(123)
+train_idx <- sample(seq_len(nrow(X_spam)), size = 3000)
+X_train_spam <- X_spam[train_idx, ]
+y_train_spam <- y_spam[train_idx]
+X_test_spam  <- X_spam[-train_idx, ]
+y_test_spam  <- y_spam[-train_idx]
+
+# ---- Linear Model ----
+fit_spam_lin <- roclearn(X_train_spam, y_train_spam, lambda = 0.1)
+summary(fit_spam_lin)
+
+# Predict
+pred_score_spam_lin <- predict(fit_spam_lin, X_test_spam, type = "response")
+head(pred_score_spam_lin)
+
+pred_class_spam_lin <- predict(fit_spam_lin, X_test_spam, type = "class")
+head(pred_class_spam_lin)
+
+# AUC
+auc(fit_spam_lin, X_test_spam, y_test_spam)
+```
+
+```{r}
+# Cross-Validation (Linear) with default lambda sequence
+# (uses the automatically generated decreasing lambda.vec)
+cvfit_spam_lin <- cv.roclearn(
+  X_train_spam, y_train_spam, nfolds=5)
+summary(cvfit_spam_lin)
+```
+
+```{r, fig.width=7, fig.height=6}
+# Plot the cross-validation AUC curve across lambda values
+plot(cvfit_spam_lin)
+```
+
+```{r}
+# ---- Kernel Model ----
+fit_spam_ker <- kroclearn(X_train_spam, y_train_spam, lambda = 0.1, kernel = "radial")
+summary(fit_spam_ker)
+
+# Predict
+pred_score_spam_ker <- predict(fit_spam_ker, X_test_spam, type = "response")
+head(pred_score_spam_ker)
+
+pred_class_spam_ker <- predict(fit_spam_ker, X_test_spam, type = "class")
+head(pred_class_spam_ker)
+
+# AUC
+auc(fit_spam_ker, X_test_spam, y_test_spam)
+```
+
+```{r}
+# Cross-Validation (Kernel) with default lambda sequence
+# (uses the automatically generated decreasing lambda.vec)
+cvfit_spam_ker <- cv.kroclearn(
+  X_train_spam, y_train_spam,
+  kernel = "radial",nfolds=5)
+summary(cvfit_spam_ker)
+```
+
+```{r, fig.width=7, fig.height=6}
+# Plot the cross-validation AUC curve across lambda values
+plot(cvfit_spam_ker)
+```
+
+
 # Conclusion
 
-The **roclab** package provides tools for direct AUC maximization in binary classification,
-with **linear models** (supporting regularization penalties) and **kernel models** (supporting kernel functions).
-Both models allow multiple loss functions and scalable training for large, imbalanced datasets.
+The **roclab** package implements direct AUC maximization for binary classification 
+through both **linear models** (with regularization penalties) and **kernel models** 
+(with flexible kernel functions). It supports multiple surrogate loss functions 
+and incorporates scalability techniques, making AUC maximization practical for 
+large, imbalanced datasets.
