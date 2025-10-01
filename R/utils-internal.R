@@ -301,13 +301,13 @@ compute.lambda.max <- function(X, y, penalty, param.penalty, loss,
     beta.init <- adamax.update(
       X.ij = X.ij, lambda = lambda.max * 1e-3,
       loss = loss, beta.init = rep(0, p), maxiter = maxiter, eps = 1e-3
-    )
+    )$beta.hat
     # Retry with lambda=0 if initialization failed
     if ((length(beta.init) == 1 && is.na(beta.init)) || any(abs(beta.init) < 1e-8)) {
       beta.init <- adamax.update(
         X.ij = X.ij, lambda = 0,
         loss = loss, beta.init = rep(0, p), maxiter = maxiter, eps = 1e-3
-      )
+      )$beta.hat
     }
 
     if ((length(beta.init) == 1 && is.na(beta.init)) || any(abs(beta.init) < 1e-8)) {
