@@ -415,7 +415,7 @@ GD.nonlinear <- function(K0,K.ij,lambda,loss,theta.init,maxiter,eps) {
       g <- lambda * K0 %*% theta - colMeans(K.ij*plogis(-K.ij.theta))
     }else if(loss=="exponential"){
       g <- lambda * K0 %*% theta - colMeans(K.ij*exp(- K.ij.theta))
-    }else if(loss=="squared hinge"){
+    }else if(loss=="hinge2"){
       g <- lambda * K0 %*% theta - colMeans(2 * K.ij* (1-K.ij.theta) * as.vector(1 - K.ij.theta > 0))
     } else{
       stop("Unsupported type of loss.")
@@ -428,7 +428,7 @@ GD.nonlinear <- function(K0,K.ij,lambda,loss,theta.init,maxiter,eps) {
   }
   if(iter>=maxiter){
     warning("Algorithm did not converge.")
-    new.theta <- NA
+    new.theta <- rep(NA_real_, p)
   }
   return(list(theta.hat=new.theta,converged = iter < maxiter, n.iter = iter))
 }
@@ -450,7 +450,7 @@ GD.nystrom <- function(Phi.ij,lambda,loss,theta.init,maxiter,eps) {
       g <- lambda * theta - colMeans(Phi.ij * plogis(-theta.Phi.ij))
     }else if(loss=="exponential"){
       g <- lambda * theta - colMeans(Phi.ij*exp(- theta.Phi.ij))
-    }else if(loss=="squared hinge"){
+    }else if(loss=="hinge2"){
       g <- lambda * theta - colMeans(2 * Phi.ij* (1-theta.Phi.ij) * as.vector(1 - theta.Phi.ij > 0))
     } else{
       stop("Unsupported type of loss.")
@@ -463,7 +463,7 @@ GD.nystrom <- function(Phi.ij,lambda,loss,theta.init,maxiter,eps) {
   }
   if(iter>=maxiter){
     warning("Algorithm did not converge.")
-    new.theta <- NA
+    new.theta <- rep(NA_real_, p)
   }
   return(list(theta.hat=new.theta,converged = iter < maxiter, n.iter = iter))
 }

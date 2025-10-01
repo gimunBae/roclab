@@ -278,11 +278,15 @@ cv.kroclearn <- function(
           loss = loss, approx = approx, intercept = FALSE,
           param.convergence = list(maxiter=maxiter, eps=eps)
         )
-        if (length(fit$theta.hat) == 1 && is.na(fit$theta.hat))
-          diverge.lambda <- c(diverge.lambda, lam)
-        auc <- auc.kroclearn(fit, X.val, y.val)  # you must implement auc.kroclearn()
-        time.vec[j] <- fit$time
-        auc.vec[j]  <- auc
+        if (all(is.na(fit$theta.hat))){
+          diverge.lambda <- c(diverge.lambda, lambda)
+          time.vec[j] <- NA
+          auc.vec[j]  <- NA
+        } else{
+          auc <- auc.kroclearn(fit, X.val, y.val)
+          time.vec[j] <- fit$time
+          auc.vec[j]  <- auc
+        }
       }
     }
     time.result <- rbind(time.result, time.vec)

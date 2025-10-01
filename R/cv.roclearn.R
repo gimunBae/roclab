@@ -289,13 +289,15 @@ cv.roclearn <- function(
           param.convergence = list(maxiter = maxiter, eps = eps)
         )
         # Mark non-converged solutions
-        if (length(fit$beta.hat) == 1 && is.na(fit$beta.hat))
+        if (all(is.na(fit$beta.hat))){
           diverge.lambda <- c(diverge.lambda, lambda)
-
-        # Evaluate AUC on validation fold
-        auc <- auc.roclearn(fit, X.val, y.val)
-        time.vec <- c(time.vec, fit$time)
-        auc.vec <- c(auc.vec, auc)
+          time.vec <- c(time.vec, NA)
+          auc.vec <- c(auc.vec, NA)
+        } else{
+          auc <- auc.roclearn(fit, X.val, y.val)
+          time.vec <- c(time.vec, fit$time)
+          auc.vec <- c(auc.vec, auc)
+        }
       }
     }
     time.result <- rbind(time.result, time.vec)
