@@ -226,7 +226,10 @@ cv.roclearn <- function(
   # --- Convergence controls
   if (!is.list(param.convergence)) stop("'param.convergence' must be a list.", call. = FALSE)
   param.convergence <- utils::modifyList(
-    list(maxiter = 5e4, eps = if (penalty == "mcp") 1e-3 else 1e-4),
+    list(
+      maxiter = 5e4,
+      eps = if (penalty %in% c("scad", "mcp")) 1e-3 else 1e-4
+    ),
     param.convergence
   )
   if (!is.numeric(param.convergence$maxiter) || length(param.convergence$maxiter) != 1L ||
@@ -243,7 +246,7 @@ cv.roclearn <- function(
   # --- Construct lambda sequence if not provided
   if (is.null(lambda.vec)) {
     lambda.max <- compute.lambda.max(X, y, penalty, param.penalty, loss, approx, maxiter, eps)
-    lambda_min_ratio <- ifelse(penalty %in% c("ridge","lasso","elastic"), 1e-3, 1e-2)
+    lambda_min_ratio <- 1e-3
     lambda.vec <- exp(seq(
       log(lambda.max),
       log(lambda.max * lambda_min_ratio),

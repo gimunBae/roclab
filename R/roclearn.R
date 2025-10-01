@@ -235,7 +235,10 @@ roclearn <- function(
   if (!is.list(param.convergence))
     stop("'param.convergence' must be a list.", call. = FALSE)
   param.convergence <- utils::modifyList(
-    list(maxiter = 5e4, eps = if (penalty == "mcp") 1e-3 else 1e-4),
+    list(
+      maxiter = 5e4,
+      eps = if (penalty %in% c("scad", "mcp")) 1e-3 else 1e-4
+    ),
     param.convergence
   )
   if (!is.numeric(param.convergence$maxiter) || length(param.convergence$maxiter) != 1L ||

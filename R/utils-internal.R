@@ -58,15 +58,22 @@ GD.linear <- function(X.ij, lambda, penalty, param.penalty, loss, maxiter, eps) 
   } else if (penalty == "alasso") {
     beta.init.ad.lss <- adamax.update(X.ij = X.ij, lambda = lambda, loss = loss, beta.init = beta.init, maxiter = maxiter, eps = 10^(-3))$beta.hat
     if (any(is.na(beta.init.ad.lss)) ||  any(abs(beta.init.ad.lss) < 1e-8))    beta.init.ad.lss <- adamax.update(X.ij = X.ij, lambda = 0, loss = loss, beta.init = beta.init, maxiter = maxiter, eps = 10^(-3))$beta.hat
-    if (any(is.na(beta.init.ad.lss)) ||  any(abs(beta.init.ad.lss) < 1e-8))  {
-      stop("alasso initialization failed: OLS and Ridge estimates did not converge or contain zero coefficients. Try using a different penalty instead.")
+    if (any(is.na(beta.init.ad.lss)) || any(abs(beta.init.ad.lss) < 1e-8)) {
+      warning("alasso initialization failed: OLS and Ridge estimates did not converge or contain zero coefficients. A standard lasso penalty will be applied instead.")
+      beta.init.ad.lss <- rep(1, p)
     }
     weight <- 1 / (abs(beta.init.ad.lss)^(param.penalty) + 1e-8)
     update <- adamax.update.pr(X.ij = X.ij, lambda = lambda * weight,  param.penalty = 1,
                                  loss = loss, beta.init = beta.init, maxiter = maxiter, eps = eps)
   } else if (penalty %in% c("scad", "mcp")) {
     beta.init.lss <- adamax.update.pr(X.ij = X.ij, lambda = lambda, param.penalty = 1,
-                                      loss = loss, beta.init = beta.init, maxiter = maxiter, eps = eps)$beta.hat
+                                      loss = loss, beta.init = beta.init, maxiter = maxiter, eps = 10^(-3))$beta.hat
+    if (any(is.na(beta.init.lss))) {
+      beta.init.lss <-adamax.update(X.ij = X.ij, lambda = 0, loss = loss, beta.init = beta.init, maxiter = maxiter, eps = 10^(-3))$beta.hat
+    }
+    if (any(is.na(beta.init.lss))) {
+      beta.init.lss <- rep(0, p)
+    }
     update <- adamax.update.pr.nonconvex(X.ij = X.ij, lambda = lambda,
                                            penalty = penalty,param.penalty = param.penalty, loss = loss, beta.init = beta.init.lss,
                                            maxiter = maxiter, eps = eps)
@@ -265,7 +272,6 @@ compute.lambda.max <- function(X, y, penalty, param.penalty, loss,
   # Split into positive and negative classes
   n <- nrow(X)
   p <- ncol(X)
-
   plus.idx <- which(y > 0)
   np <- length(plus.idx)
   nm <- n - np
@@ -286,7 +292,6 @@ compute.lambda.max <- function(X, y, penalty, param.penalty, loss,
   }
   # Compute mean difference
   pairwise.mean.diff <- colMeans(X.ij)
-
   # Base lambda.max depending on loss
   if (loss %in% c("hinge", "exponential")) {
     lambda.max <- max(abs(pairwise.mean.diff))
@@ -309,15 +314,13 @@ compute.lambda.max <- function(X, y, penalty, param.penalty, loss,
         loss = loss, beta.init = rep(0, p), maxiter = maxiter, eps = 1e-3
       )$beta.hat
     }
-
     if ((length(beta.init) == 1 && is.na(beta.init)) || any(abs(beta.init) < 1e-8)) {
       stop("alasso initialization failed: estimates did not converge or contain zeros. Try a different penalty.")
     }
-
     weight <- 1 / (abs(beta.init)^param.penalty + 1e-8)
     lambda.max <- max(abs(pairwise.mean.diff / weight))
   }
-
+  lambda.max <- 0.15 * lambda.max
   return(lambda.max)
 }
 K.func.complete <- function(plus.matrix, minus.matrix) {
