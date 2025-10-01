@@ -7,7 +7,7 @@
 An R package for **direct AUC maximization** in binary classification.  
 It provides both **linear** and **kernel-based** models:  
 
-- **Linear models** support various **regularization penalties** (ridge, lasso, elastic net, etc.).  
+- **Linear models** support various **regularization penalties** (ridge, lasso, alasso, elastic net, scad, mcp).  
 - **Kernel models** offer a range of kernel functions (radial, polynomial, linear, laplace).  
 - **Both models** provide a variety of surrogate loss functions (hinge, hinge2 (squared hinge), logistic, exponential).  
 

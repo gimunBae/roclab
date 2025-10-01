@@ -158,6 +158,8 @@ adamax.update.pr.nonconvex <- function(X.ij, lambda, penalty,param.penalty, loss
   m <- u <- 0
   iter <- 0
   p <- ncol(X.ij)
+  if (any(is.na(beta.init))) stop("beta.init contains NA")
+  beta <- beta.init
   while (iter < maxiter) {
     iter <- iter + 1
     beta.X.ij <- as.vector(X.ij %*% beta)

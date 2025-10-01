@@ -23,7 +23,7 @@ library(roclab)
 The **roclab** package implements direct AUC maximization for binary classification, 
 supporting both linear and kernel-based models.
 
-- **Linear models** provide various regularization penalties (ridge, lasso, elastic net, etc.).  
+- **Linear models** provide various regularization penalties (ridge, lasso, alasso, elastic net, scad, mcp).
 - **Kernel models** support flexible kernel functions (radial, polynomial, linear, laplace).  
 - **Both models** include several surrogate loss functions (hinge, hinge2 (squared hinge), logistic, exponential).
 
