@@ -64,19 +64,19 @@ X_test_lin <- rbind(
 )
 y_test_lin <- c(rep(-1, n_neg_test_lin), rep(1, n_pos_test_lin))
 
-# Fit linear model
+# Fit a linear model
 fit_lin <- roclearn(X_train_lin, y_train_lin, lambda = 0.1)
 
 # Summary
 summary(fit_lin)
 
-# AUC on test
+# AUC on the test set
 auc(fit_lin, X_test_lin, y_test_lin)
 
 # Predict classes {-1, 1}
 predict(fit_lin, X_test_lin, type = "class")
 
-# 5-fold CV (lambda.vec fixed; nfolds last)
+# 5-fold CV 
 cvfit_lin <- cv.roclearn(
   X_train_lin, y_train_lin,
   lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
@@ -86,7 +86,7 @@ cvfit_lin <- cv.roclearn(
 # Summarize cross-validation results
 summary(cvfit_lin)
 
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_lin)
 
 
@@ -105,19 +105,19 @@ theta_test_ker <- runif(n_test_ker, 0, 2*pi)
 X_test_ker <- cbind(r_test_ker * cos(theta_test_ker), r_test_ker * sin(theta_test_ker))
 y_test_ker <- ifelse(r_test_ker < 0.5, 1, -1)
 
-# Fit kernel model
+# Fit a kernel model
 fit_ker <- kroclearn(X_train_ker, y_train_ker, lambda = 0.1, kernel = "radial")
 
 # Summary
 summary(fit_ker)
 
-# AUC on test
+# AUC on the test set
 auc(fit_ker, X_test_ker, y_test_ker)
 
 # Predict classes {-1, 1}
 predict(fit_ker, X_test_ker, type = "class")
 
-# 5-fold CV (lambda.vec fixed; nfolds last)
+# 5-fold CV 
 cvfit_ker <- cv.kroclearn(
   X_train_ker, y_train_ker,
   lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
@@ -128,7 +128,7 @@ cvfit_ker <- cv.kroclearn(
 # Summarize cross-validation results
 summary(cvfit_ker)
 
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_ker)
 ```
 

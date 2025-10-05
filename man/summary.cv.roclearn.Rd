@@ -31,7 +31,6 @@ across candidate \eqn{\lambda} values.
 \donttest{
 set.seed(123)
 
-## Linear model cross-validation
 n <- 1500
 n_pos <- round(0.2 * n)
 n_neg <- n - n_pos

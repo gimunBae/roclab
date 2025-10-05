@@ -16,7 +16,6 @@
 #' \donttest{
 #' set.seed(123)
 #'
-#' # Training data (linear classification example)
 #' n_train <- 1500
 #' n_pos <- round(0.2 * n_train)
 #' n_neg <- n_train - n_pos
@@ -27,7 +26,6 @@
 #' )
 #' y_train <- c(rep(-1, n_neg), rep(1, n_pos))
 #'
-#' # Test data
 #' n_test <- 300
 #' n_pos_test <- round(0.2 * n_test)
 #' n_neg_test <- n_test - n_pos_test
@@ -38,10 +36,8 @@
 #' )
 #' y_test <- c(rep(-1, n_neg_test), rep(1, n_pos_test))
 #'
-#' # Fit linear model
 #' fit <- roclearn(X_train, y_train, lambda = 0.1)
 #'
-#' # Compute AUC on test data
 #' auc(fit, X_test, y_test)
 #' }
 auc.roclearn <- function(object, newdata, y, ...) {

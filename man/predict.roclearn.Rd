@@ -39,11 +39,11 @@ y <- c(rep(-1, n_neg), rep(1, n_pos))
 
 fit <- roclearn(X, y, lambda = 0.1)
 
-# Predicted classes {-1, 1}
-pred_class <- predict(fit, X, type = "class")
+# Predict classes {-1, 1}
+predict(fit, X, type = "class")
 
-# Predicted decision scores
-pred_score <- predict(fit, X, type = "response")
+# Predict decision scores
+predict(fit, X, type = "response")
 }
 }
 \seealso{

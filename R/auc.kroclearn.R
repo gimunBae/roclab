@@ -16,24 +16,20 @@
 #' \donttest{
 #' set.seed(123)
 #'
-#' # Training data (nonlinear, circular decision boundary)
 #' n_train <- 1500
 #' r_train <- sqrt(runif(n_train, 0.05, 1))
 #' theta_train <- runif(n_train, 0, 2*pi)
 #' X_train <- cbind(r_train * cos(theta_train), r_train * sin(theta_train))
 #' y_train <- ifelse(r_train < 0.5, 1, -1)
 #'
-#' # Test data
 #' n_test <- 300
 #' r_test <- sqrt(runif(n_test, 0.05, 1))
 #' theta_test <- runif(n_test, 0, 2*pi)
 #' X_test <- cbind(r_test * cos(theta_test), r_test * sin(theta_test))
 #' y_test <- ifelse(r_test < 0.5, 1, -1)
 #'
-#' # Fit kernel model with RBF kernel
 #' fit <- kroclearn(X_train, y_train, lambda = 0.1, kernel = "radial")
 #'
-#' # Compute AUC on test data
 #' auc(fit, X_test, y_test)
 #' }
 auc.kroclearn <- function(object, newdata, y, ...) {

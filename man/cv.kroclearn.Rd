@@ -83,7 +83,6 @@ select the optimal model based on AUC.
 }
 \examples{
 \donttest{
-## Kernel model example
 set.seed(123)
 n <- 1500
 r <- sqrt(runif(n, 0.05, 1))

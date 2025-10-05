@@ -58,13 +58,12 @@ X_train_lin <- rbind(
 )
 y_train_lin <- c(rep(-1, n_neg_lin), rep(1, n_pos_lin))
 
-# Fit linear model
+# Fit a linear model
 fit_lin <- roclearn(X_train_lin, y_train_lin, lambda = 0.1)
 
 # Summary
 summary(fit_lin)
 
-# Test set
 n_test_lin <- 300
 n_pos_test_lin <- round(0.2 * n_test_lin)
 n_neg_test_lin <- n_test_lin - n_pos_test_lin
@@ -74,13 +73,15 @@ X_test_lin <- rbind(
 )
 y_test_lin <- c(rep(-1, n_neg_test_lin), rep(1, n_pos_test_lin))
 
-# Predict
+# Predict decision scores
 pred_score_lin <- predict(fit_lin, X_test_lin, type = "response")
 head(pred_score_lin)
 
+# Predict classes {-1, 1}
 pred_class_lin <- predict(fit_lin, X_test_lin, type = "class")
 head(pred_class_lin)
-# AUC
+
+# AUC on the test set
 auc(fit_lin, X_test_lin, y_test_lin)
 ```
 
@@ -94,51 +95,51 @@ theta_train_ker <- runif(n_ker, 0, 2*pi)
 X_train_ker <- cbind(r_train_ker * cos(theta_train_ker), r_train_ker * sin(theta_train_ker))
 y_train_ker <- ifelse(r_train_ker < 0.5, 1, -1)
 
-# Fit kernel model
+# Fit a kernel model
 fit_ker <- kroclearn(X_train_ker, y_train_ker, lambda = 0.1, kernel = "radial")
 
 # Summary
 summary(fit_ker)
 
-# Test set
 n_test_ker <- 300
 r_test_ker <- sqrt(runif(n_test_ker, 0.05, 1))
 theta_test_ker <- runif(n_test_ker, 0, 2*pi)
 X_test_ker <- cbind(r_test_ker * cos(theta_test_ker), r_test_ker * sin(theta_test_ker))
 y_test_ker <- ifelse(r_test_ker < 0.5, 1, -1)
 
-# Predict
+# Predict decision scores
 pred_score_ker <- predict(fit_ker, X_test_ker, type = "response")
 head(pred_score_ker)
 
+# Predict classes {-1, 1}
 pred_class_ker <- predict(fit_ker, X_test_ker, type = "class")
 head(pred_class_ker)
 
-# AUC
+# AUC on the test set
 auc(fit_ker, X_test_ker, y_test_ker)
 ```
 
 
 # Cross-Validation
 ```{r}
-# Linear CV
+# 5-fold CV for linear models
 cvfit_lin <- cv.roclearn(
   X_train_lin, y_train_lin,
   lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
   nfolds = 5
 )
 
-# Summarize cross-validation results
+# Summarize the cross-validation result
 summary(cvfit_lin)
 ```
 
 ```{r, fig.width=7, fig.height=6}
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_lin)
 ```
 
 ```{r}
-# Kernel CV
+# 5-fold CV for kernel models
 cvfit_ker <- cv.kroclearn(
   X_train_ker, y_train_ker,
   lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
@@ -146,12 +147,12 @@ cvfit_ker <- cv.kroclearn(
   nfolds = 5
 )
 
-# Summarize cross-validation results
+# Summarize the cross-validation result
 summary(cvfit_ker)
 ```
 
 ```{r, fig.width=7, fig.height=6}
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_ker)
 ```
 
@@ -172,23 +173,24 @@ y_train_iono <- y_iono[train_idx]
 X_test_iono  <- X_iono[-train_idx, ]
 y_test_iono  <- y_iono[-train_idx]
 
-# ---- Linear Model ----
+# Fit a linear model
 fit_iono_lin <- roclearn(X_train_iono, y_train_iono, lambda = 0.1, approx=TRUE)
 summary(fit_iono_lin)
 
-# Predict
+# Predict decision scores
 pred_score_iono_lin <- predict(fit_iono_lin, X_test_iono, type = "response")
 head(pred_score_iono_lin)
 
+# Predict classes {-1, 1}
 pred_class_iono_lin <- predict(fit_iono_lin, X_test_iono, type = "class")
 head(pred_class_iono_lin)
 
-# AUC
+# AUC on the test set
 auc(fit_iono_lin, X_test_iono, y_test_iono)
 ```
 
 ```{r}
-# Cross-Validation (Linear) with default lambda sequence
+# 5-fold CV for linear models with default lambda sequence
 # (uses the automatically generated decreasing lambda.vec)
 cvfit_iono_lin <- cv.roclearn(
   X_train_iono, y_train_iono,
@@ -197,28 +199,29 @@ summary(cvfit_iono_lin)
 ```
 
 ```{r, fig.width=7, fig.height=6}
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_iono_lin)
 ```
 
 ```{r}
-# ---- Kernel Model ----
+# Fit a kernel model
 fit_iono_ker <- kroclearn(X_train_iono, y_train_iono, lambda = 0.1, kernel = "radial", approx=TRUE)
 summary(fit_iono_ker)
 
-# Predict
+# Predict decision scores
 pred_score_iono_ker <- predict(fit_iono_ker, X_test_iono, type = "response")
 head(pred_score_iono_ker)
 
+# Predict classes {-1, 1}
 pred_class_iono_ker <- predict(fit_iono_ker, X_test_iono, type = "class")
 head(pred_class_iono_ker)
 
-# AUC
+# AUC on the test set
 auc(fit_iono_ker, X_test_iono, y_test_iono)
 ```
 
 ```{r}
-# Cross-Validation (Kernel) with default lambda sequence
+# 5-fold CV for kernel models with default lambda sequence
 # (uses the automatically generated decreasing lambda.vec)
 cvfit_iono_ker <- cv.kroclearn(
   X_train_iono, y_train_iono,
@@ -228,7 +231,7 @@ summary(cvfit_iono_ker)
 ```
 
 ```{r, fig.width=7, fig.height=6}
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_iono_ker)
 ```
 
@@ -249,23 +252,24 @@ y_train_spam <- y_spam[train_idx]
 X_test_spam  <- X_spam[-train_idx, ]
 y_test_spam  <- y_spam[-train_idx]
 
-# ---- Linear Model ----
+# Fit a linear model
 fit_spam_lin <- roclearn(X_train_spam, y_train_spam, lambda = 0.1)
 summary(fit_spam_lin)
 
-# Predict
+# Predict decision scores
 pred_score_spam_lin <- predict(fit_spam_lin, X_test_spam, type = "response")
 head(pred_score_spam_lin)
 
+# Predict classes {-1, 1}
 pred_class_spam_lin <- predict(fit_spam_lin, X_test_spam, type = "class")
 head(pred_class_spam_lin)
 
-# AUC
+# AUC on the test set
 auc(fit_spam_lin, X_test_spam, y_test_spam)
 ```
 
 ```{r}
-# Cross-Validation (Linear) with default lambda sequence
+# 5-fold CV for linear models with default lambda sequence
 # (uses the automatically generated decreasing lambda.vec)
 cvfit_spam_lin <- cv.roclearn(
   X_train_spam, y_train_spam, nfolds=5)
@@ -273,28 +277,29 @@ summary(cvfit_spam_lin)
 ```
 
 ```{r, fig.width=7, fig.height=6}
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_spam_lin)
 ```
 
 ```{r}
-# ---- Kernel Model ----
+# Fit a kernel model
 fit_spam_ker <- kroclearn(X_train_spam, y_train_spam, lambda = 0.1, kernel = "radial")
 summary(fit_spam_ker)
 
-# Predict
+# Predict decision scores
 pred_score_spam_ker <- predict(fit_spam_ker, X_test_spam, type = "response")
 head(pred_score_spam_ker)
 
+# Predict classes {-1, 1}
 pred_class_spam_ker <- predict(fit_spam_ker, X_test_spam, type = "class")
 head(pred_class_spam_ker)
 
-# AUC
+# AUC on the test set
 auc(fit_spam_ker, X_test_spam, y_test_spam)
 ```
 
 ```{r}
-# Cross-Validation (Kernel) with default lambda sequence
+# 5-fold CV for kernel models with default lambda sequence
 # (uses the automatically generated decreasing lambda.vec)
 cvfit_spam_ker <- cv.kroclearn(
   X_train_spam, y_train_spam,
@@ -303,7 +308,7 @@ summary(cvfit_spam_ker)
 ```
 
 ```{r, fig.width=7, fig.height=6}
-# Plot the cross-validation AUC curve across lambda values
+# Plot the cross-validation AUC across lambda values
 plot(cvfit_spam_ker)
 ```
 

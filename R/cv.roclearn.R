@@ -53,7 +53,6 @@
 #'
 #' @examples
 #' \donttest{
-#' ## Linear model example
 #' set.seed(123)
 #' n <- 1500
 #' n_pos <- round(0.2 * n)

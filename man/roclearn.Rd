@@ -88,7 +88,6 @@ set.seed(123)
 n <- 1500
 n_pos <- round(0.2 * n)
 n_neg <- n - n_pos
-
 X <- rbind(
   matrix(rnorm(2 * n_neg, mean = -1), ncol = 2),
   matrix(rnorm(2 * n_pos, mean =  1), ncol = 2)

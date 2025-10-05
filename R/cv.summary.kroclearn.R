@@ -22,7 +22,6 @@
 #' \donttest{
 #' set.seed(123)
 #'
-#' ## Kernel model cross-validation
 #' n <- 1500
 #' r <- sqrt(runif(n, 0.05, 1))
 #' theta <- runif(n, 0, 2*pi)

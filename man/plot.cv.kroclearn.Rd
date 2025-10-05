@@ -37,7 +37,6 @@ variability across folds. This is the kernel counterpart of
 \donttest{
 set.seed(123)
 
-## Simulated nonlinear (circular) classification
 n <- 1500
 r <- sqrt(runif(n, 0.05, 1))
 theta <- runif(n, 0, 2*pi)
@@ -51,7 +50,6 @@ cvfit <- cv.kroclearn(
   nfolds = 5
 )
 
-# Plot CV curve with highlighted optimal lambda
 plot(cvfit)
 }
 }
