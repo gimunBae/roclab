@@ -1,11 +1,6 @@
-#' Predictions from Linear AUC Maximization Models
+#' Predictions from a fitted linear model
 #'
-#' Generate predictions from a fitted linear AUC maximization model
-#' (\code{"roclearn"}).
-#'
-#' Predictions are computed from the fitted coefficient vector and intercept,
-#' after applying the same preprocessing steps (dummy encoding, column alignment,
-#' and column removal) as during training.
+#' Generate predictions from a fitted linear model.
 #'
 #' @param object A fitted model object of class \code{"roclearn"} (linear).
 #' @param newdata A data frame or matrix of predictors for which predictions

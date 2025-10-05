@@ -2,7 +2,7 @@
 % Please edit documentation in R/auc.roclearn.R
 \name{auc.roclearn}
 \alias{auc.roclearn}
-\title{Compute AUC for Linear AUC Maximization Models}
+\title{Compute AUC for a fitted linear model}
 \usage{
 \method{auc}{roclearn}(object, newdata, y, ...)
 }
@@ -21,15 +21,7 @@ automatically).}
 A numeric scalar giving the estimated AUC.
 }
 \description{
-Estimate the Area Under the ROC Curve (AUC) for a fitted linear model on new data.
-The AUC is defined as the proportion of positive–negative pairs for which
-the positive sample receives a higher score than the negative.
-}
-\details{
-For linear models (\code{roclearn}), decision scores are computed as a linear
-combination of predictors with the estimated coefficients.
-The intercept term, if present, does not affect the AUC because only score
-differences between positive and negative samples matter.
+Estimate the AUC (Area Under the ROC Curve) for a fitted linear model on new data.
 }
 \examples{
 \donttest{

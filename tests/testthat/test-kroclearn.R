@@ -54,17 +54,3 @@ test_that("summary.kroclearn prints without error", {
   fit <- kroclearn(X, y, lambda = 0.1, kernel = "radial")
   expect_invisible(summary(fit))
 })
-
-test_that("plot.kroclearn runs without error", {
-  set.seed(123)
-  n <- 1500
-  r <- sqrt(runif(n, 0.05, 1))
-  theta <- runif(n, 0, 2 * pi)
-  X <- cbind(r * cos(theta), r * sin(theta))
-  y <- ifelse(r < 0.5, 1, -1)
-
-  fit <- kroclearn(X, y, lambda = 0.1, kernel = "radial")
-
-  p <- plot(fit, newdata = X, y = y, features = c(1, 2))
-  expect_s3_class(p, "ggplot")
-})

@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.roclearn.R
 \name{summary.roclearn}
 \alias{summary.roclearn}
-\title{Summarize a fitted linear AUC model}
+\title{Summarize a fitted linear model}
 \usage{
 \method{summary}{roclearn}(object, ...)
 }

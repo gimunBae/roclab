@@ -2,7 +2,7 @@
 % Please edit documentation in R/cv.plot.roclearn.R
 \name{plot.cv.roclearn}
 \alias{plot.cv.roclearn}
-\title{Plot Cross-Validation Curve for AUC Models}
+\title{Visualize Cross-Validation results for linear models}
 \usage{
 \method{plot}{cv.roclearn}(x, highlight = TRUE, ...)
 }
@@ -10,7 +10,7 @@
 \item{x}{A cross-validation object of class \code{"cv.roclearn"}.}
 
 \item{highlight}{Logical; if \code{TRUE}, mark the selected optimal
-\eqn{\lambda} with a vertical dashed line and a red point (default
+\eqn{\lambda} with a vertical dashed line with a red point (default
 \code{TRUE}).}
 
 \item{...}{Additional arguments passed to underlying \pkg{ggplot2} functions.}
@@ -20,16 +20,17 @@ A \code{ggplot2} object is returned and drawn to the current device.
 }
 \description{
 Produce a visualization of cross-validation results from a fitted
-\code{cv.roclearn} object. The plot shows the mean AUC across regularization
-parameters \eqn{\lambda}, with error bars reflecting the cross-validation
-standard deviation. Optionally, the selected optimal \eqn{\lambda} is
-highlighted with a dashed line and marker.
+\code{cv.roclearn} object. The plot shows the mean AUC across
+regularization parameters \eqn{\lambda}, with error bars reflecting
+the cross-validation standard deviation. Optionally, the selected
+optimal \eqn{\lambda} is highlighted with a dashed line and marker.
 }
 \details{
-This function is a method for the generic \code{plot()} function, designed
-specifically for cross-validation objects from \code{cv.roclearn}.
-The x-axis is displayed on a log scale for \eqn{\lambda}, and the y-axis
-represents mean AUC values. Error bars show variability across folds.
+This function is a method for the generic \code{plot()} function,
+designed specifically for cross-validation objects from
+\code{cv.roclearn}. The x-axis is displayed on a log scale for
+\eqn{\lambda}, and the y-axis represents AUC values. Error bars
+show variability across folds.
 }
 \examples{
 \donttest{

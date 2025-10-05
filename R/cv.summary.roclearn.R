@@ -1,9 +1,6 @@
-#' Summarize Cross-Validation Results (Linear Model)
+#' Summarize Cross-Validation results for linear models
 #'
-#' Print a concise summary of cross-validation results for a linear
-#' AUC maximization model. Reports the number of folds, the set of
-#' candidate \eqn{\lambda} values, the selected optimal \eqn{\lambda},
-#' and corresponding cross-validated AUC statistics.
+#' Print a concise summary of cross-validation results for a linear model.
 #'
 #' @param object A fitted cross-validation object of class
 #'   \code{"cv.roclearn"} (linear).
@@ -12,7 +9,7 @@
 #' @details
 #' This is a method for the generic \code{summary()} function, applied to
 #' objects of class \code{"cv.roclearn"}. It prints training settings
-#' (loss, penalty, number of folds, number of candidate \eqn{\lambda}),
+#' (loss, penalty, number of folds, the set of candidate \eqn{\lambda}),
 #' the selected optimal \eqn{\lambda}, the corresponding mean and standard
 #' deviation of cross-validated AUC, and a truncated table of AUC results
 #' across candidate \eqn{\lambda} values.
@@ -47,7 +44,7 @@ summary.cv.roclearn <- function(object, ...) {
   if (!inherits(object, "cv.roclearn"))
     stop("object must be of class 'cv.roclearn'.", call. = FALSE)
 
-  cat("Cross-validated Linear Model (AUC Maximization)\n")
+  cat("Cross-validated Linear Model \n")
   cat("-----------------------\n")
 
   # Call

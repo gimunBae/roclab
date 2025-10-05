@@ -1,8 +1,6 @@
-#' Compute AUC for Linear AUC Maximization Models
+#' Compute AUC for a fitted linear model
 #'
-#' Estimate the Area Under the ROC Curve (AUC) for a fitted linear model on new data.
-#' The AUC is defined as the proportion of positive–negative pairs for which
-#' the positive sample receives a higher score than the negative.
+#' Estimate the AUC (Area Under the ROC Curve) for a fitted linear model on new data.
 #'
 #' @param object A fitted model object of class \code{"roclearn"} (linear model).
 #' @param newdata A matrix or data.frame of test predictors. Must have the same
@@ -10,12 +8,6 @@
 #'   automatically).
 #' @param y Response vector of test labels (\{-1, 1\} or convertible).
 #' @param ... Not used.
-#'
-#' @details
-#' For linear models (\code{roclearn}), decision scores are computed as a linear
-#' combination of predictors with the estimated coefficients.
-#' The intercept term, if present, does not affect the AUC because only score
-#' differences between positive and negative samples matter.
 #'
 #' @return A numeric scalar giving the estimated AUC.
 #' @export

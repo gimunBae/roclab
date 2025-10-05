@@ -4,22 +4,27 @@
 [![R-CMD-check](https://github.com/gimunBae/roclab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gimunBae/roclab/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-An R package for **direct AUC maximization** in binary classification.  
-It provides both **linear** and **kernel-based** models:  
+An R package for **ROC optimizing binary classification**. It provides both
+**linear** and **kernel** models:
 
-- **Linear models** support various **regularization penalties** (ridge, lasso, alasso, elastic net, scad, mcp).  
-- **Kernel models** offer a range of kernel functions (radial, polynomial, linear, laplace).  
-- **Both models** provide a variety of surrogate loss functions (hinge, hinge2 (squared hinge), logistic, exponential).  
+- **Linear models** provide various **regularization penalties**
+  (ridge, lasso, alasso, elastic net, scad, mcp).
+- **Kernel models** support a range of kernel functions
+  (radial, polynomial, linear, laplace).
+- **Both models** include a variety of surrogate loss functions
+  (hinge, hinge2 (squared hinge), logistic, exponential).
 
-Efficient optimization is performed using **Gradient Descent with the Adamax update rule** 
-—a variant of Adam based on the infinity norm—for kernel models and for linear models 
-with the ridge penalty. For linear models with other penalties (i.e., those involving 
-variable selection), **Proximal Gradient Descent with an Adamax adaptive learning rate scheme** is employed.
-  
-For large datasets, scalability is achieved by approximating the empirical loss 
-using **incomplete U-statistics**, and by applying a **Nyström low-rank approximation** 
-to the kernel matrix. These approximations reduce computational cost while 
-preserving accuracy, making AUC maximization feasible in large-scale imbalanced data.
+For large datasets, scalability is achieved by approximating the empirical
+loss using **incomplete U-statistics**, and by applying a **Nyström low-rank
+approximation** to the kernel matrix. These approximations reduce computational
+cost while preserving accuracy, making ROC optimizing binary classification
+feasible in large-scale data.
+
+In addition, efficient optimization is performed using **Gradient Descent with
+the Adamax update rule** —a variant of Adam, based on the infinity norm—for
+linear models with the ridge penalty and kernel models. For linear models with
+other penalties (i.e., those involving variable selection), **Proximal Gradient
+Descent with an Adamax adaptive learning rate scheme** is employed.
 
 ## Installation
 
@@ -71,9 +76,6 @@ auc(fit_lin, X_test_lin, y_test_lin)
 # Predict classes {-1, 1}
 predict(fit_lin, X_test_lin, type = "class")
 
-# Plot decision boundary
-plot(fit_lin, newdata = X_test_lin, y = y_test_lin, features = c(1, 2))
-
 # 5-fold CV (lambda.vec fixed; nfolds last)
 cvfit_lin <- cv.roclearn(
   X_train_lin, y_train_lin,
@@ -115,9 +117,6 @@ auc(fit_ker, X_test_ker, y_test_ker)
 # Predict classes {-1, 1}
 predict(fit_ker, X_test_ker, type = "class")
 
-# Plot decision boundary
-plot(fit_ker, newdata = X_test_ker, y = y_test_ker, features = c(1, 2))
-
 # 5-fold CV (lambda.vec fixed; nfolds last)
 cvfit_ker <- cv.kroclearn(
   X_train_ker, y_train_ker,
@@ -141,5 +140,5 @@ License: MIT (see [LICENSE](LICENSE) file).
 
 If you use this package in academic work, please cite as:
 
-Bae, G. (2025). *roclab: Direct AUC Maximization for Binary Classification*.  
+Bae, G., & Shin, S. J. (2025). *roclab: ROC optimizing binary classification model*.
 R package version 0.1.0. Available at: https://github.com/gimunBae/roclab

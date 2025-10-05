@@ -1,9 +1,6 @@
-#' Summarize Cross-Validation Results (Kernel Model)
+#' Summarize Cross-Validation results for kernel models
 #'
-#' Print a concise summary of cross-validation results for a kernel
-#' AUC maximization model. Reports the number of folds, the set of
-#' candidate \eqn{\lambda} values, the selected optimal \eqn{\lambda},
-#' and corresponding cross-validated AUC statistics.
+#' Print a concise summary of cross-validation results for a kernel model.
 #'
 #' @param object A fitted cross-validation object of class
 #'   \code{"cv.kroclearn"} (kernel).
@@ -12,7 +9,7 @@
 #' @details
 #' This is a method for the generic \code{summary()} function, applied to
 #' objects of class \code{"cv.kroclearn"}. It prints training settings
-#' (loss, kernel type, number of folds, number of candidate \eqn{\lambda}),
+#' (loss, kernel type, number of folds, the set of candidate \eqn{\lambda}),
 #' the selected optimal \eqn{\lambda}, the corresponding mean and standard
 #' deviation of cross-validated AUC, and a truncated table of AUC results
 #' across candidate \eqn{\lambda} values.
@@ -45,7 +42,7 @@ summary.cv.kroclearn <- function(object, ...) {
   if (!inherits(object, "cv.kroclearn"))
     stop("object must be of class 'cv.kroclearn'.", call. = FALSE)
 
-  cat("Cross-validated Kernel Model (AUC Maximization)\n")
+  cat("Cross-validated Kernel Model \n")
   cat("------------------------------\n")
 
   # Call

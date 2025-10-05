@@ -2,7 +2,7 @@
 % Please edit documentation in R/kroclearn.R
 \name{kroclearn}
 \alias{kroclearn}
-\title{Fit a Kernel AUC Maximization Model}
+\title{Fit a kernel model}
 \usage{
 kroclearn(
   X,
@@ -18,11 +18,12 @@ kroclearn(
 )
 }
 \arguments{
-\item{X}{Predictor matrix or data.frame. Categorical variables are automatically
-one-hot encoded (first level dropped).}
+\item{X}{Predictor matrix or data.frame (categorical variables are
+automatically one-hot encoded).}
 
-\item{y}{Class labels in \{-1, 1\}. Labels given as \{0,1\} or as two-level
-factors/characters are coerced automatically.}
+\item{y}{Response vector with class labels in \{-1, 1\}. Labels given as
+\{0, 1\} or as a two-level factor/character are automatically converted
+to this format.}
 
 \item{lambda}{Positive scalar regularization parameter.}
 
@@ -38,17 +39,15 @@ i.e., after categorical variables are one-hot encoded).
 \item Ignored for \code{"linear"} kernel.
 }}
 
-\item{loss}{Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
+\item{loss}{Surrogate loss function type. One of:
+\code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 \code{"logistic"}, or \code{"exponential"}.}
 
-\item{approx}{Logical; if \code{TRUE}, train the kernel model using
-subsampled positive–negative pairs (incomplete U-statistic), and further
-apply a Nyström approximation to the kernel matrix. This reduces memory and
-time cost for large datasets.
-Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.}
+\item{approx}{Logical; enables a scalable approximation to accelerate training.
+The default is \code{TRUE} when \code{nrow(X) >= 1000}, and \code{FALSE} otherwise.
+For details about how approximation is applied, see the \code{details} section.}
 
-\item{intercept}{Logical; if \code{TRUE}, estimate an intercept term
-(default \code{TRUE}).}
+\item{intercept}{Logical; include an intercept in the model (default \code{TRUE}).}
 
 \item{target.perf}{List with target sensitivity and specificity used when
 estimating the intercept (defaults to 0.9 each).}
@@ -67,7 +66,7 @@ An object of class \code{"kroclearn"}, a list containing:
 \item \code{nobs}, \code{p} — number of observations and predictors.
 \item \code{converged}, \code{n.iter} — convergence information.
 \item \code{kfunc} — kernel function object.
-\item \code{nystrom} — Nyström approximation details (if used).
+\item \code{nystrom} — low rank kernel approximation details (if used).
 \item \code{X} — training data (post-preprocessing).
 \item \code{preprocessing} — details on categorical variables,
 removed columns, and column names.
@@ -75,11 +74,18 @@ removed columns, and column names.
 }
 }
 \description{
-Train a kernel-based model that directly maximizes the Area Under the ROC Curve (AUC).
-Several kernel types and loss functions are supported.
-For large datasets, the algorithm can speed up training by using only a sampled subset of
-positive–negative pairs (incomplete U-statistic approximation), together with a low-rank
-approximation of the kernel matrix (Nyström approximation).
+Fit a kernel model
+}
+\details{
+For large-scale data, the model is computationally prohibitive because its
+loss is a U-statistic involving a double summation. To reduce this burden,
+the package adopts an efficient algorithm based on an incomplete U-statistic,
+which approximates the loss with a single summation. In kernel models,
+a Nyström low-rank approximation is further applied to efficiently compute
+the kernel matrix. These approximations substantially reduce computational
+cost and accelerate training, while maintaining accuracy, making the model
+feasible for large-scale datasets. This option is available when
+\code{@param approx = TRUE}.
 }
 \examples{
 \donttest{

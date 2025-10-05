@@ -20,25 +20,30 @@ library(roclab)
 
 # Overview
 
-The **roclab** package implements direct AUC maximization for binary classification, 
-supporting both linear and kernel-based models.
+The **roclab** package implements ROC optimizing binary classification, supporting
+both linear and kernel models.
 
-- **Linear models** provide various regularization penalties (ridge, lasso, alasso, elastic net, scad, mcp).
-- **Kernel models** support flexible kernel functions (radial, polynomial, linear, laplace).  
-- **Both models** include several surrogate loss functions (hinge, hinge2 (squared hinge), logistic, exponential).
+- **Linear models** provide various regularization penalties (ridge, lasso, alasso,
+  elastic net, scad, mcp).
+- **Kernel models** support flexible kernel functions (radial, polynomial, linear,
+  laplace).
+- **Both models** include several surrogate loss functions (hinge, hinge2 (squared
+  hinge), logistic, exponential).
 
-Efficient optimization is performed using **Gradient Descent with the Adamax update rule** 
-—a variant of Adam based on the infinity norm—for kernel models and for linear models 
-with the ridge penalty. For linear models with other penalties (i.e., those involving variable selection), 
-**Proximal Gradient Descent with an Adamax adaptive learning rate scheme** is employed.
+For large-scale data, the model is computationally prohibitive because its loss
+is a U-statistic involving a double summation. To reduce this burden, the package
+adopts an efficient algorithm based on an incomplete U-statistic, which approximates
+the loss with a single summation. In kernel models, a Nyström low-rank approximation
+is further applied to efficiently compute the kernel matrix. These approximations
+substantially reduce computational cost and accelerate training, while maintaining
+accuracy, making ROC optimizing binary classification practical for large-scale
+datasets.
 
-To address the scalability challenge of AUC maximization, the package adopts 
-**incomplete U-statistics**, which approximate the empirical loss through a subset 
-of positive–negative pairs. In kernel models, a **Nyström low-rank approximation** 
-is further applied to the kernel matrix. These approximations substantially reduce computational cost 
-and accelerate training, while maintaining accuracy, making AUC maximization practical for large-scale, 
-imbalanced datasets.
-
+In addition, efficient optimization is performed using **Gradient Descent with the
+Adamax update rule** —a variant of Adam, based on the infinity norm—for linear
+models with the ridge penalty and kernel models. For linear models with other
+penalties (i.e., those involving variable selection), **Proximal Gradient Descent
+with an Adamax adaptive learning rate scheme** is employed.
 
 # Example: Linear Model
 ```{r}
@@ -79,11 +84,6 @@ head(pred_class_lin)
 auc(fit_lin, X_test_lin, y_test_lin)
 ```
 
-```{r, fig.width=7, fig.height=6}
-# Plot decision boundary
-plot(fit_lin, newdata = X_test_lin, y = y_test_lin, features = c(1, 2))
-```
-
 
 # Example: Kernel Model
 ```{r}
@@ -116,11 +116,6 @@ head(pred_class_ker)
 
 # AUC
 auc(fit_ker, X_test_ker, y_test_ker)
-```
-
-```{r, fig.width=7, fig.height=6}
-# Plot decision boundary
-plot(fit_ker, newdata = X_test_ker, y = y_test_ker, features = c(1, 2))
 ```
 
 
@@ -192,11 +187,6 @@ head(pred_class_iono_lin)
 auc(fit_iono_lin, X_test_iono, y_test_iono)
 ```
 
-```{r, fig.width=7, fig.height=6}
-# Plot decision boundary
-plot(fit_iono_lin, newdata = X_test_iono, y = y_test_iono, features = c(3, 5))
-```
-
 ```{r}
 # Cross-Validation (Linear) with default lambda sequence
 # (uses the automatically generated decreasing lambda.vec)
@@ -225,11 +215,6 @@ head(pred_class_iono_ker)
 
 # AUC
 auc(fit_iono_ker, X_test_iono, y_test_iono)
-```
-
-```{r, fig.width=7, fig.height=6}
-# Plot decision boundary
-plot(fit_iono_ker, newdata = X_test_iono, y = y_test_iono, features = c(3, 5), others="median")
 ```
 
 ```{r}
@@ -325,8 +310,8 @@ plot(cvfit_spam_ker)
 
 # Conclusion
 
-The **roclab** package implements direct AUC maximization for binary classification 
-through both **linear models** (with regularization penalties) and **kernel models** 
-(with flexible kernel functions). It supports multiple surrogate loss functions 
-and incorporates scalability techniques, making AUC maximization practical for 
-large, imbalanced datasets.
+The **roclab** package implements ROC optimizing binary classification through
+both **linear models** (with regularization penalties) and **kernel models**
+(with various kernel functions). It supports multiple surrogate loss functions
+and incorporates scalable options to efficiently handle large datasets.
+

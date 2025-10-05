@@ -2,7 +2,7 @@
 % Please edit documentation in R/roclearn.R
 \name{roclearn}
 \alias{roclearn}
-\title{Fit a Linear AUC Maximization Model}
+\title{Fit a linear model}
 \usage{
 roclearn(
   X,
@@ -18,11 +18,12 @@ roclearn(
 )
 }
 \arguments{
-\item{X}{Predictor matrix or data.frame. Categorical variables are automatically
-one-hot encoded (first level dropped).}
+\item{X}{Predictor matrix or data.frame (categorical variables are
+automatically one-hot encoded).}
 
-\item{y}{Class labels in \{-1, 1\}. Labels given as \{0,1\} or as two-level
-factors/characters are coerced automatically.}
+\item{y}{Response vector with class labels in \{-1, 1\}. Labels given as
+\{0, 1\} or as a two-level factor/character are automatically converted
+to this format.}
 
 \item{lambda}{Positive scalar regularization parameter.}
 
@@ -38,17 +39,15 @@ factors/characters are coerced automatically.}
 \item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
 }}
 
-\item{loss}{Loss function:
-\code{"hinge"} (default), \code{"hinge2"} (squared hinge), \code{"logistic"},
-or \code{"exponential"}.}
+\item{loss}{Surrogate loss function type. One of:
+\code{"hinge"} (default), \code{"hinge2"} (squared hinge),
+\code{"logistic"}, or \code{"exponential"}.}
 
-\item{approx}{Logical; if \code{TRUE}, train the linear model using
-a subsampled set of positive–negative pairs (incomplete U-statistic).
-This substantially reduces computational cost for large datasets.
-Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.}
+\item{approx}{Logical; enables a scalable approximation to accelerate training.
+The default is \code{TRUE} when \code{nrow(X) >= 1000}, and \code{FALSE} otherwise.
+For details about how approximation is applied, see the \code{details} section.}
 
-\item{intercept}{Logical; if \code{TRUE}, estimate an intercept term
-(default \code{TRUE}).}
+\item{intercept}{Logical; include an intercept in the model (default \code{TRUE}).}
 
 \item{target.perf}{List with target sensitivity and specificity used when
 estimating the intercept (defaults to 0.9 each).}
@@ -72,10 +71,16 @@ removed columns, and column names.
 }
 }
 \description{
-Train a linear model that directly maximizes the Area Under the ROC Curve (AUC).
-Regularization penalties and several convex/non-convex loss functions are supported.
-For large datasets, the algorithm can speed up training by using only a sampled subset of
-positive–negative pairs (incomplete U-statistic approximation).
+Fit a linear model
+}
+\details{
+For large-scale data, the model is computationally prohibitive because its
+loss is a U-statistic involving a double summation. To reduce this burden,
+the package adopts an efficient algorithm based on an incomplete U-statistic,
+which approximates the loss with a single summation. These approximations
+substantially reduce computational cost and accelerate training, while
+maintaining accuracy, making the model feasible for large-scale datasets.
+This option is available when \code{approx = TRUE}.
 }
 \examples{
 \donttest{

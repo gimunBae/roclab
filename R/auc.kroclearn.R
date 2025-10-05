@@ -1,8 +1,6 @@
-#' Compute AUC for Kernel AUC Maximization Models
+#' Compute AUC for a fitted kernel model
 #'
-#' Estimate the Area Under the ROC Curve (AUC) for a fitted kernel-based model on new data.
-#' The AUC is defined as the proportion of positive–negative pairs for which
-#' the positive sample receives a higher score than the negative.
+#' Estimate the AUC (Area Under the ROC Curve) for a fitted kernel model on new data.
 #'
 #' @param object A fitted model object of class \code{"kroclearn"} (kernel model).
 #' @param newdata A matrix or data.frame of test predictors. Must have the same
@@ -10,16 +8,6 @@
 #'   automatically).
 #' @param y Response vector of test labels (\{-1, 1\} or convertible).
 #' @param ... Not used.
-#'
-#' @details
-#' For kernel models (\code{kroclearn}), decision scores are computed via kernel
-#' evaluations between the test set and the training set (or Nyström landmarks
-#' if approximation was used).
-#' If Nyström approximation was applied during training, the same low-rank
-#' feature representation is used for the test data by projecting onto the
-#' landmark-based feature space.
-#' The intercept, if present, does not affect AUC since only relative score
-#' differences matter.
 #'
 #' @return A numeric scalar giving the estimated AUC.
 #' @export

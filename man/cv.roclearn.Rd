@@ -2,7 +2,7 @@
 % Please edit documentation in R/cv.roclearn.R
 \name{cv.roclearn}
 \alias{cv.roclearn}
-\title{Cross-validation for Linear AUC Maximization Models}
+\title{Cross-validation for linear models}
 \usage{
 cv.roclearn(
   X,
@@ -24,10 +24,11 @@ cv.roclearn(
 automatically one-hot encoded).}
 
 \item{y}{Response vector with class labels in \{-1, 1\}. Labels given as
-\{0,1\} or as a two-level factor/character are coerced automatically.}
+\{0, 1\} or as a two-level factor/character are automatically converted
+to this format.}
 
-\item{lambda.vec}{Optional numeric vector of penalty values. If \code{NULL} (default),
-a decreasing sequence is generated automatically.}
+\item{lambda.vec}{Optional numeric vector of regularization parameters (lambda values).
+If \code{NULL} (default), a decreasing sequence is generated automatically.}
 
 \item{lambda.length}{Number of \eqn{\lambda} values to generate if
 \code{lambda.vec} is \code{NULL}. Default is 30.}
@@ -43,13 +44,14 @@ a decreasing sequence is generated automatically.}
 \item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
 }}
 
-\item{loss}{Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
+\item{loss}{Surrogate loss function type. One of:
+\code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 \code{"logistic"}, or \code{"exponential"}.}
 
-\item{approx}{Logical; if \code{TRUE}, train the linear model using
-a subsampled set of positive–negative pairs (incomplete U-statistic).
-This substantially reduces computational cost for large datasets.
-Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.}
+\item{approx}{Logical; enables a scalable approximation to accelerate training.
+The default is \code{TRUE} when \code{nrow(X) >= 1000}, and \code{FALSE} otherwise.
+For details about how approximation is applied, see the \code{details}
+section of the \code{roclearn} function.}
 
 \item{intercept}{Logical; include an intercept in the model (default \code{TRUE}).}
 
@@ -76,8 +78,8 @@ An object of class \code{"cv.roclearn"} with:
 }
 }
 \description{
-Perform k-fold cross-validation over a sequence of \eqn{\lambda} values
-and select the optimal linear model based on cross-validated AUC.
+Perform k-fold cross-validation over a sequence of \eqn{\lambda} values and
+select the optimal model based on AUC.
 }
 \examples{
 \donttest{
@@ -100,4 +102,7 @@ cvfit <- cv.roclearn(
 )
 cvfit$optimal.lambda
 }
+}
+\seealso{
+\code{\link{roclearn}}
 }

@@ -1,14 +1,15 @@
-#' Cross-validation for Linear AUC Maximization Models
+#' Cross-validation for linear models
 #'
-#' Perform k-fold cross-validation over a sequence of \eqn{\lambda} values
-#' and select the optimal linear model based on cross-validated AUC.
+#' Perform k-fold cross-validation over a sequence of \eqn{\lambda} values and
+#' select the optimal model based on AUC.
 #'
 #' @param X Predictor matrix or data.frame (categorical variables are
 #'   automatically one-hot encoded).
 #' @param y Response vector with class labels in \{-1, 1\}. Labels given as
-#'   \{0,1\} or as a two-level factor/character are coerced automatically.
-#' @param lambda.vec Optional numeric vector of penalty values. If \code{NULL} (default),
-#'   a decreasing sequence is generated automatically.
+#'   \{0, 1\} or as a two-level factor/character are automatically converted
+#'   to this format.
+#' @param lambda.vec Optional numeric vector of regularization parameters (lambda values).
+#'    If \code{NULL} (default), a decreasing sequence is generated automatically.
 #' @param lambda.length Number of \eqn{\lambda} values to generate if
 #'   \code{lambda.vec} is \code{NULL}. Default is 30.
 #' @param penalty Regularization penalty type: \code{"ridge"} (default), \code{"lasso"},
@@ -20,12 +21,13 @@
 #'     \item Adaptive weight exponent \eqn{\gamma > 0} for \code{"alasso"}. Default is 1.
 #'     \item Tuning parameter (default 3.7) for \code{"scad"} and \code{"mcp"}.
 #'   }
-#' @param loss Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
+#' @param loss Surrogate loss function type. One of:
+#'   \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 #'   \code{"logistic"}, or \code{"exponential"}.
-#' @param approx Logical; if \code{TRUE}, train the linear model using
-#'   a subsampled set of positive–negative pairs (incomplete U-statistic).
-#'   This substantially reduces computational cost for large datasets.
-#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.
+#' @param approx Logical; enables a scalable approximation to accelerate training.
+#'   The default is \code{TRUE} when \code{nrow(X) >= 1000}, and \code{FALSE} otherwise.
+#'   For details about how approximation is applied, see the \code{details}
+#'   section of the \code{roclearn} function.
 #' @param intercept Logical; include an intercept in the model (default \code{TRUE}).
 #' @param nfolds Number of cross-validation folds (default 10).
 #' @param target.perf List with target sensitivity and specificity used when
@@ -46,6 +48,8 @@
 #'     \item \code{nfolds}, \code{loss}, \code{penalty} — settings.
 #'   }
 #' @export
+#'
+#' @seealso \code{\link{roclearn}}
 #'
 #' @examples
 #' \donttest{

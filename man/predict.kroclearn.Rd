@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict.kroclearn.R
 \name{predict.kroclearn}
 \alias{predict.kroclearn}
-\title{Predictions from Kernel AUC Maximization Models}
+\title{Predictions from a fitted kernel model}
 \usage{
 \method{predict}{kroclearn}(object, newdata, type = c("class", "response"), ...)
 }
@@ -23,13 +23,7 @@ A numeric vector of predictions (\{-1, 1\}) if \code{type = "class"},
 or raw decision scores if \code{type = "response"}.
 }
 \description{
-Generate predictions from a fitted kernel AUC maximization model
-(\code{"kroclearn"}).
-}
-\details{
-Predictions are computed from the fitted dual coefficients and kernel
-evaluations. If the model was trained with Nyström approximation,
-the same approximation is applied during prediction.
+Generate predictions from a fitted kernel model.
 }
 \examples{
 \donttest{

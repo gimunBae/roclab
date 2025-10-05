@@ -1,14 +1,15 @@
-#' Cross-validation for Kernel AUC Maximization Models
+#' Cross-validation for kernel models
 #'
-#' Perform k-fold cross-validation over a sequence of \eqn{\lambda} values
-#' and select the optimal kernel model based on cross-validated AUC.
+#' Perform k-fold cross-validation over a sequence of \eqn{\lambda} values and
+#' select the optimal model based on AUC.
 #'
 #' @param X Predictor matrix or data.frame (categorical variables are
 #'   automatically one-hot encoded).
 #' @param y Response vector with class labels in \{-1, 1\}. Labels given as
-#'   \{0,1\} or as a two-level factor/character are coerced automatically.
-#' @param lambda.vec Optional numeric vector of penalty values. If \code{NULL} (default),
-#'   a decreasing sequence is generated automatically.
+#'   \{0, 1\} or as a two-level factor/character are automatically converted
+#'   to this format.
+#' @param lambda.vec Optional numeric vector of regularization parameters (lambda values).
+#'    If \code{NULL} (default), a decreasing sequence is generated automatically.
 #' @param lambda.length Number of \eqn{\lambda} values to generate if
 #'   \code{lambda.vec} is \code{NULL}. Default is 30.
 #' @param kernel Kernel type: \code{"radial"} (default), \code{"polynomial"},
@@ -21,13 +22,13 @@
 #'     \item Degree for \code{"polynomial"} kernel (default 2).
 #'     \item Ignored for \code{"linear"} kernel.
 #'   }
-#' @param loss Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
+#' @param loss Surrogate loss function type. One of:
+#'   \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 #'   \code{"logistic"}, or \code{"exponential"}.
-#' @param approx Logical; if \code{TRUE}, train the kernel model using
-#'   subsampled positive–negative pairs (incomplete U-statistic), and further
-#'   apply a Nyström approximation to the kernel matrix. This reduces memory and
-#'   time cost for large datasets.
-#'   Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.
+#' @param approx Logical; enables a scalable approximation to accelerate training.
+#'   The default is \code{TRUE} when \code{nrow(X) >= 1000}, and \code{FALSE} otherwise.
+#'   For details about how approximation is applied, see the \code{details}
+#'   section of the \code{kroclearn} function.
 #' @param intercept Logical; include an intercept in the model (default \code{TRUE}).
 #' @param nfolds Number of cross-validation folds (default 10).
 #' @param target.perf List with target sensitivity and specificity used when
@@ -38,8 +39,7 @@
 #' @return An object of class \code{"cv.kroclearn"} with:
 #'   \itemize{
 #'     \item \code{optimal.lambda} — selected \eqn{\lambda}.
-#'     \item \code{optimal.fit} — model refit on the full data at
-#'       \code{optimal.lambda}.
+#'     \item \code{optimal.fit} — model trained at \code{optimal.lambda}.
 #'     \item \code{lambda.vec} — grid of penalty values considered.
 #'     \item \code{auc.mean}, \code{auc.sd} — mean and sd of cross-validated AUC.
 #'     \item \code{auc.result} — fold-by-lambda AUC matrix.
@@ -48,6 +48,8 @@
 #'     \item \code{nfolds}, \code{loss}, \code{kernel} — settings.
 #'   }
 #' @export
+#'
+#' @seealso \code{\link{kroclearn}}
 #'
 #' @examples
 #' \donttest{

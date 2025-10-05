@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict.roclearn.R
 \name{predict.roclearn}
 \alias{predict.roclearn}
-\title{Predictions from Linear AUC Maximization Models}
+\title{Predictions from a fitted linear model}
 \usage{
 \method{predict}{roclearn}(object, newdata, type = c("class", "response"), ...)
 }
@@ -23,13 +23,7 @@ A numeric vector of predictions (\{-1, 1\}) if \code{type = "class"},
 or raw decision scores if \code{type = "response"}.
 }
 \description{
-Generate predictions from a fitted linear AUC maximization model
-(\code{"roclearn"}).
-}
-\details{
-Predictions are computed from the fitted coefficient vector and intercept,
-after applying the same preprocessing steps (dummy encoding, column alignment,
-and column removal) as during training.
+Generate predictions from a fitted linear model.
 }
 \examples{
 \donttest{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/auc.kroclearn.R
 \name{auc.kroclearn}
 \alias{auc.kroclearn}
-\title{Compute AUC for Kernel AUC Maximization Models}
+\title{Compute AUC for a fitted kernel model}
 \usage{
 \method{auc}{kroclearn}(object, newdata, y, ...)
 }
@@ -21,19 +21,7 @@ automatically).}
 A numeric scalar giving the estimated AUC.
 }
 \description{
-Estimate the Area Under the ROC Curve (AUC) for a fitted kernel-based model on new data.
-The AUC is defined as the proportion of positive–negative pairs for which
-the positive sample receives a higher score than the negative.
-}
-\details{
-For kernel models (\code{kroclearn}), decision scores are computed via kernel
-evaluations between the test set and the training set (or Nyström landmarks
-if approximation was used).
-If Nyström approximation was applied during training, the same low-rank
-feature representation is used for the test data by projecting onto the
-landmark-based feature space.
-The intercept, if present, does not affect AUC since only relative score
-differences matter.
+Estimate the AUC (Area Under the ROC Curve) for a fitted kernel model on new data.
 }
 \examples{
 \donttest{

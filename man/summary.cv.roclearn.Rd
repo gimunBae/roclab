@@ -2,7 +2,7 @@
 % Please edit documentation in R/cv.summary.roclearn.R
 \name{summary.cv.roclearn}
 \alias{summary.cv.roclearn}
-\title{Summarize Cross-Validation Results (Linear Model)}
+\title{Summarize Cross-Validation results for linear models}
 \usage{
 \method{summary}{cv.roclearn}(object, ...)
 }
@@ -17,15 +17,12 @@ Invisibly returns the input \code{object}, after printing a summary
 to the console.
 }
 \description{
-Print a concise summary of cross-validation results for a linear
-AUC maximization model. Reports the number of folds, the set of
-candidate \eqn{\lambda} values, the selected optimal \eqn{\lambda},
-and corresponding cross-validated AUC statistics.
+Print a concise summary of cross-validation results for a linear model.
 }
 \details{
 This is a method for the generic \code{summary()} function, applied to
 objects of class \code{"cv.roclearn"}. It prints training settings
-(loss, penalty, number of folds, number of candidate \eqn{\lambda}),
+(loss, penalty, number of folds, the set of candidate \eqn{\lambda}),
 the selected optimal \eqn{\lambda}, the corresponding mean and standard
 deviation of cross-validated AUC, and a truncated table of AUC results
 across candidate \eqn{\lambda} values.

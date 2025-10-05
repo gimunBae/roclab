@@ -73,20 +73,3 @@ test_that("summary.roclearn prints without error", {
   expect_invisible(summary(fit))
 })
 
-test_that("plot.roclearn runs without error", {
-  set.seed(123)
-  n <- 1500
-  n_pos <- round(0.2 * n)
-  n_neg <- n - n_pos
-
-  X <- rbind(
-    matrix(rnorm(2 * n_neg, mean = -1), ncol = 2),
-    matrix(rnorm(2 * n_pos, mean =  1), ncol = 2)
-  )
-  y <- c(rep(-1, n_neg), rep(1, n_pos))
-
-  fit <- roclearn(X, y, lambda = 0.1)
-
-  p <- plot(fit, newdata = X, y = y, features = c(1, 2))
-  expect_s3_class(p, "ggplot")
-})

@@ -1,4 +1,4 @@
-#' Summarize a fitted kernel AUC model
+#' Summarize a fitted kernel model
 #'
 #' Display key information from a fitted \code{"kroclearn"} object, including:
 #' data dimensions, kernel specification, convergence status, training time,
@@ -29,7 +29,7 @@ summary.kroclearn <- function(object, ...) {
   if (!inherits(object, "kroclearn"))
     stop("object must be of class 'kroclearn'.", call. = FALSE)
 
-  cat("Kernel Model Summary (AUC Maximization)\n")
+  cat("Kernel Model Summary \n")
   cat("-----------------------------\n")
 
   # Call

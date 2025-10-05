@@ -1,4 +1,4 @@
-#' Summarize a fitted linear AUC model
+#' Summarize a fitted linear model
 #'
 #' Display key information from a fitted \code{"roclearn"} object, including:
 #' data dimensions, model specification, convergence status, training time,
@@ -32,7 +32,7 @@ summary.roclearn <- function(object, ...) {
   if (!inherits(object, "roclearn"))
     stop("object must be of class 'roclearn'.", call. = FALSE)
 
-  cat("Linear Model Summary (AUC Maximization)\n")
+  cat("Linear Model Summary \n")
   cat("----------------------\n")
 
   # Call

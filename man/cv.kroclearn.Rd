@@ -2,7 +2,7 @@
 % Please edit documentation in R/cv.kroclearn.R
 \name{cv.kroclearn}
 \alias{cv.kroclearn}
-\title{Cross-validation for Kernel AUC Maximization Models}
+\title{Cross-validation for kernel models}
 \usage{
 cv.kroclearn(
   X,
@@ -24,10 +24,11 @@ cv.kroclearn(
 automatically one-hot encoded).}
 
 \item{y}{Response vector with class labels in \{-1, 1\}. Labels given as
-\{0,1\} or as a two-level factor/character are coerced automatically.}
+\{0, 1\} or as a two-level factor/character are automatically converted
+to this format.}
 
-\item{lambda.vec}{Optional numeric vector of penalty values. If \code{NULL} (default),
-a decreasing sequence is generated automatically.}
+\item{lambda.vec}{Optional numeric vector of regularization parameters (lambda values).
+If \code{NULL} (default), a decreasing sequence is generated automatically.}
 
 \item{lambda.length}{Number of \eqn{\lambda} values to generate if
 \code{lambda.vec} is \code{NULL}. Default is 30.}
@@ -44,14 +45,14 @@ i.e., after categorical variables are one-hot encoded).
 \item Ignored for \code{"linear"} kernel.
 }}
 
-\item{loss}{Loss function: \code{"hinge"} (default), \code{"hinge2"} (squared hinge),
+\item{loss}{Surrogate loss function type. One of:
+\code{"hinge"} (default), \code{"hinge2"} (squared hinge),
 \code{"logistic"}, or \code{"exponential"}.}
 
-\item{approx}{Logical; if \code{TRUE}, train the kernel model using
-subsampled positive–negative pairs (incomplete U-statistic), and further
-apply a Nyström approximation to the kernel matrix. This reduces memory and
-time cost for large datasets.
-Default is \code{TRUE} when \code{nrow(X) >= 1000}, otherwise \code{FALSE}.}
+\item{approx}{Logical; enables a scalable approximation to accelerate training.
+The default is \code{TRUE} when \code{nrow(X) >= 1000}, and \code{FALSE} otherwise.
+For details about how approximation is applied, see the \code{details}
+section of the \code{kroclearn} function.}
 
 \item{intercept}{Logical; include an intercept in the model (default \code{TRUE}).}
 
@@ -67,8 +68,7 @@ estimating the intercept (defaults to 0.9 each).}
 An object of class \code{"cv.kroclearn"} with:
 \itemize{
 \item \code{optimal.lambda} — selected \eqn{\lambda}.
-\item \code{optimal.fit} — model refit on the full data at
-\code{optimal.lambda}.
+\item \code{optimal.fit} — model trained at \code{optimal.lambda}.
 \item \code{lambda.vec} — grid of penalty values considered.
 \item \code{auc.mean}, \code{auc.sd} — mean and sd of cross-validated AUC.
 \item \code{auc.result} — fold-by-lambda AUC matrix.
@@ -78,8 +78,8 @@ An object of class \code{"cv.kroclearn"} with:
 }
 }
 \description{
-Perform k-fold cross-validation over a sequence of \eqn{\lambda} values
-and select the optimal kernel model based on cross-validated AUC.
+Perform k-fold cross-validation over a sequence of \eqn{\lambda} values and
+select the optimal model based on AUC.
 }
 \examples{
 \donttest{
@@ -99,4 +99,7 @@ cvfit <- cv.kroclearn(
 )
 cvfit$optimal.lambda
 }
+}
+\seealso{
+\code{\link{kroclearn}}
 }

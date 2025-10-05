@@ -15,6 +15,6 @@ auc(object, ...)
 Numeric scalar: estimated AUC.
 }
 \description{
-Compute Area Under the Curve (AUC) for a fitted model.
-Dispatches to class-specific methods such as \code{auc.rocsvm}.
+Compute AUC (Area Under the ROC Curve) for a fitted model.
+Dispatches to class-specific methods such as \code{auc.roclearn}.
 }

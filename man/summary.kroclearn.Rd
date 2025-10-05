@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.kroclearn.R
 \name{summary.kroclearn}
 \alias{summary.kroclearn}
-\title{Summarize a fitted kernel AUC model}
+\title{Summarize a fitted kernel model}
 \usage{
 \method{summary}{kroclearn}(object, ...)
 }
