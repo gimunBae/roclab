@@ -1,5 +1,5 @@
 Package: roclab
-Title: ROC optimizing binary classification model
+Title: ROC optimizing binary classifiers
 Version: 0.0.0.9000
 Authors@R: 
     c(
@@ -10,7 +10,7 @@ Authors@R:
              email = "sjshin@korea.ac.kr", 
              role = "aut")
     )
-Description: Implements ROC-optimizing binary classification, supporting both
+Description: Implements ROC-optimizing binary classifiers, supporting both
     linear and kernel models. Both model types provide a variety of
     surrogate loss functions. In addition, linear models offer multiple
     regularization penalties, whereas kernel models support a range of kernel

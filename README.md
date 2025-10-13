@@ -4,7 +4,7 @@
 [![R-CMD-check](https://github.com/gimunBae/roclab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gimunBae/roclab/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-An R package for **ROC optimizing binary classification**. It provides both
+An R package for **ROC optimizing binary classifiers**. It provides both
 **linear** and **kernel** models:
 
 - **Linear models** provide various **regularization penalties**
@@ -17,7 +17,7 @@ An R package for **ROC optimizing binary classification**. It provides both
 For large datasets, scalability is achieved by approximating the empirical
 loss using **incomplete U-statistics**, and by applying a **Nyström low-rank
 approximation** to the kernel matrix. These approximations reduce computational
-cost while preserving accuracy, making ROC optimizing binary classification
+cost while preserving accuracy, making ROC optimizing binary classifiers
 feasible in large-scale data.
 
 In addition, efficient optimization is performed using **Gradient Descent with
@@ -140,5 +140,5 @@ License: MIT (see [LICENSE](LICENSE) file).
 
 If you use this package in academic work, please cite as:
 
-Bae, G., & Shin, S. J. (2025). *roclab: ROC optimizing binary classification model*.
+Bae, G., & Shin, S. J. (2025). *roclab: ROC optimizing binary classifiers*.
 R package version 0.1.0. Available at: https://github.com/gimunBae/roclab

@@ -20,7 +20,7 @@ library(roclab)
 
 # Overview
 
-The **roclab** package implements ROC optimizing binary classification, supporting
+The **roclab** package implements ROC optimizing binary classifiers, supporting
 both linear and kernel models.
 
 - **Linear models** provide various regularization penalties (ridge, lasso, alasso,
@@ -36,7 +36,7 @@ adopts an efficient algorithm based on an incomplete U-statistic, which approxim
 the loss with a single summation. In kernel models, a Nyström low-rank approximation
 is further applied to efficiently compute the kernel matrix. These approximations
 substantially reduce computational cost and accelerate training, while maintaining
-accuracy, making ROC optimizing binary classification practical for large-scale
+accuracy, making ROC optimizing binary classifiers practical for large-scale
 datasets.
 
 In addition, efficient optimization is performed using **Gradient Descent with the
@@ -315,7 +315,7 @@ plot(cvfit_spam_ker)
 
 # Conclusion
 
-The **roclab** package implements ROC optimizing binary classification through
+The **roclab** package implements ROC optimizing binary classifiers through
 both **linear models** (with regularization penalties) and **kernel models**
 (with various kernel functions). It supports multiple surrogate loss functions
 and incorporates scalable options to efficiently handle large datasets.
