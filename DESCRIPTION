@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     c(
       person("Gimun", "Bae", 
-             email = "bgd5517@korea.ac.kr", 
+             email = "gimunbae0201@gmail.com", 
              role = c("aut", "cre")),
       person("Seung Jun", "Shin", 
              email = "sjshin@korea.ac.kr", 
