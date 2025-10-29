@@ -82,9 +82,8 @@ Perform k-fold cross-validation over a sequence of \eqn{\lambda} values and
 select the optimal model based on AUC.
 }
 \examples{
-\donttest{
 set.seed(123)
-n <- 1500
+n <- 100
 n_pos <- round(0.2 * n)
 n_neg <- n - n_pos
 
@@ -96,11 +95,10 @@ y <- c(rep(-1, n_neg), rep(1, n_pos))
 
 cvfit <- cv.roclearn(
   X, y,
-  lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
-  nfolds = 5
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 3)),
+  approx=TRUE, nfolds = 2
 )
 cvfit$optimal.lambda
-}
 }
 \seealso{
 \code{\link{roclearn}}

@@ -17,9 +17,8 @@
 #' @seealso \code{\link{roclearn}}, \code{\link{cv.roclearn}}
 #'
 #' @examples
-#' \donttest{
 #' set.seed(123)
-#' n <- 1500
+#' n <- 100
 #' n_pos <- round(0.2 * n)
 #' n_neg <- n - n_pos
 #' X <- rbind(
@@ -28,14 +27,13 @@
 #' )
 #' y <- c(rep(-1, n_neg), rep(1, n_pos))
 #'
-#' fit <- roclearn(X, y, lambda = 0.1)
+#' fit <- roclearn(X, y, lambda = 0.1, approx=TRUE)
 #'
 #' # Predict classes {-1, 1}
 #' predict(fit, X, type = "class")
 #'
 #' # Predict decision scores
 #' predict(fit, X, type = "response")
-#' }
 predict.roclearn <- function(object, newdata, type = c("class", "response"), ...) {
   type <- match.arg(type, c("class", "response"))
   if (!inherits(object, "roclearn"))

@@ -26,10 +26,9 @@ if (getRversion() >= "2.15.1") {
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' set.seed(123)
 #'
-#' n <- 1500
+#' n <- 100
 #' n_pos <- round(0.2 * n)
 #' n_neg <- n - n_pos
 #'
@@ -40,10 +39,10 @@ if (getRversion() >= "2.15.1") {
 #' y <- c(rep(-1, n_neg), rep(1, n_pos))
 #'
 #' cvfit <- cv.roclearn(
-#'   X, y,lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),nfolds=5)
+#'   X, y,lambda.vec = exp(seq(log(0.01), log(5), length.out = 3)),
+#'   approx=TRUE, nfolds = 2)
 #'
 #' plot(cvfit)
-#' }
 plot.cv.roclearn <- function(x, highlight = TRUE, ...) {
   object <- x
   stopifnot(inherits(object, "cv.roclearn"))

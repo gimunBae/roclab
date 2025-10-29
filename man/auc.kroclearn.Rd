@@ -24,23 +24,22 @@ A numeric scalar giving the estimated AUC.
 Estimate the AUC (Area Under the ROC Curve) for a fitted kernel model on new data.
 }
 \examples{
-\donttest{
 set.seed(123)
 
-n_train <- 1500
+n_train <- 100
 r_train <- sqrt(runif(n_train, 0.05, 1))
 theta_train <- runif(n_train, 0, 2*pi)
 X_train <- cbind(r_train * cos(theta_train), r_train * sin(theta_train))
 y_train <- ifelse(r_train < 0.5, 1, -1)
 
-n_test <- 300
+n_test <- 10
 r_test <- sqrt(runif(n_test, 0.05, 1))
 theta_test <- runif(n_test, 0, 2*pi)
 X_test <- cbind(r_test * cos(theta_test), r_test * sin(theta_test))
 y_test <- ifelse(r_test < 0.5, 1, -1)
 
-fit <- kroclearn(X_train, y_train, lambda = 0.1, kernel = "radial")
+fit <- kroclearn(X_train, y_train, lambda = 0.1,
+  kernel = "radial", approx=TRUE)
 
 auc(fit, X_test, y_test)
-}
 }

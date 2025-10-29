@@ -52,9 +52,8 @@
 #' @seealso \code{\link{roclearn}}
 #'
 #' @examples
-#' \donttest{
 #' set.seed(123)
-#' n <- 1500
+#' n <- 100
 #' n_pos <- round(0.2 * n)
 #' n_neg <- n - n_pos
 #'
@@ -66,11 +65,10 @@
 #'
 #' cvfit <- cv.roclearn(
 #'   X, y,
-#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
-#'   nfolds = 5
+#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 3)),
+#'   approx=TRUE, nfolds = 2
 #' )
 #' cvfit$optimal.lambda
-#' }
 cv.roclearn <- function(
     X, y,
     lambda.vec= NULL,
@@ -318,8 +316,8 @@ cv.roclearn <- function(
 
   # --- Report excluded (non-converged) lambdas
   for (l in unique(sort(diverge.lambda))) {
-    message <- paste0("lambda = ", l, " was excluded because the algorithm did not converge.")
-    print(message)
+    msg  <- paste0("lambda = ", l, " was excluded because the algorithm did not converge.")
+    message(msg)
   }
 
   # --- Fail if no valid results

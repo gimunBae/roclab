@@ -13,10 +13,9 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' set.seed(123)
 #'
-#' n_train <- 1500
+#' n_train <- 100
 #' n_pos <- round(0.2 * n_train)
 #' n_neg <- n_train - n_pos
 #'
@@ -26,7 +25,7 @@
 #' )
 #' y_train <- c(rep(-1, n_neg), rep(1, n_pos))
 #'
-#' n_test <- 300
+#' n_test <- 10
 #' n_pos_test <- round(0.2 * n_test)
 #' n_neg_test <- n_test - n_pos_test
 #'
@@ -36,10 +35,9 @@
 #' )
 #' y_test <- c(rep(-1, n_neg_test), rep(1, n_pos_test))
 #'
-#' fit <- roclearn(X_train, y_train, lambda = 0.1)
+#' fit <- roclearn(X_train, y_train, lambda = 0.1, approx=TRUE)
 #'
 #' auc(fit, X_test, y_test)
-#' }
 auc.roclearn <- function(object, newdata, y, ...) {
   if (!inherits(object, "roclearn"))
     stop("Object must be of class 'roclearn'.", call. = FALSE)

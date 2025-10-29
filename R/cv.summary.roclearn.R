@@ -19,10 +19,9 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' set.seed(123)
 #'
-#' n <- 1500
+#' n <- 100
 #' n_pos <- round(0.2 * n)
 #' n_neg <- n - n_pos
 #' X <- rbind(
@@ -33,12 +32,11 @@
 #'
 #' cvfit <- cv.roclearn(
 #'   X, y,
-#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
-#'   nfolds = 5
+#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 3)),
+#'   approx=TRUE, nfolds = 2
 #' )
 #'
 #' summary(cvfit)
-#' }
 summary.cv.roclearn <- function(object, ...) {
   if (!inherits(object, "cv.roclearn"))
     stop("object must be of class 'cv.roclearn'.", call. = FALSE)

@@ -83,9 +83,8 @@ maintaining accuracy, making the model feasible for large-scale datasets.
 This option is available when \code{approx = TRUE}.
 }
 \examples{
-\donttest{
 set.seed(123)
-n <- 1500
+n <- 100
 n_pos <- round(0.2 * n)
 n_neg <- n - n_pos
 X <- rbind(
@@ -94,6 +93,5 @@ X <- rbind(
 )
 y <- c(rep(-1, n_neg), rep(1, n_pos))
 
-fit <- roclearn(X, y, lambda = 0.1, penalty = "ridge")
-}
+fit <- roclearn(X, y, lambda = 0.1, penalty = "ridge", approx=TRUE)
 }

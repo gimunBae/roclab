@@ -20,7 +20,7 @@ library(roclab)
 
 # Overview
 
-The **roclab** package implements ROC optimizing binary classifiers, supporting
+The **roclab** package implements ROC-Optimizing Binary Classifiers, supporting
 both linear and kernel models.
 
 - **Linear models** provide various regularization penalties (ridge, lasso, alasso,
@@ -36,7 +36,7 @@ adopts an efficient algorithm based on an incomplete U-statistic, which approxim
 the loss with a single summation. In kernel models, a Nyström low-rank approximation
 is further applied to efficiently compute the kernel matrix. These approximations
 substantially reduce computational cost and accelerate training, while maintaining
-accuracy, making ROC optimizing binary classifiers practical for large-scale
+accuracy, making ROC-Optimizing Binary Classifiers practical for large-scale
 datasets.
 
 In addition, efficient optimization is performed using **Gradient Descent with the
@@ -190,10 +190,10 @@ auc(fit_iono_lin, X_test_iono, y_test_iono)
 ```
 
 ```{r}
-# 5-fold CV for linear models with default lambda sequence
-# (uses the automatically generated decreasing lambda.vec)
+# 5-fold CV for linear models
 cvfit_iono_lin <- cv.roclearn(
   X_train_iono, y_train_iono,
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 10)),
   approx=TRUE, nfolds=5)
 summary(cvfit_iono_lin)
 ```
@@ -221,10 +221,10 @@ auc(fit_iono_ker, X_test_iono, y_test_iono)
 ```
 
 ```{r}
-# 5-fold CV for kernel models with default lambda sequence
-# (uses the automatically generated decreasing lambda.vec)
+# 5-fold CV for kernel models
 cvfit_iono_ker <- cv.kroclearn(
   X_train_iono, y_train_iono,
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 10)),
   kernel = "radial",
   approx=TRUE, nfolds=5)
 summary(cvfit_iono_ker)
@@ -269,10 +269,10 @@ auc(fit_spam_lin, X_test_spam, y_test_spam)
 ```
 
 ```{r}
-# 5-fold CV for linear models with default lambda sequence
-# (uses the automatically generated decreasing lambda.vec)
+# 5-fold CV for linear models 
 cvfit_spam_lin <- cv.roclearn(
-  X_train_spam, y_train_spam, nfolds=5)
+  X_train_spam, y_train_spam,
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 10)), nfolds=5)
 summary(cvfit_spam_lin)
 ```
 
@@ -299,11 +299,11 @@ auc(fit_spam_ker, X_test_spam, y_test_spam)
 ```
 
 ```{r}
-# 5-fold CV for kernel models with default lambda sequence
-# (uses the automatically generated decreasing lambda.vec)
+# 5-fold CV for kernel models 
 cvfit_spam_ker <- cv.kroclearn(
   X_train_spam, y_train_spam,
-  kernel = "radial",nfolds=5)
+  kernel = "radial", 
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 10)), nfolds=5)
 summary(cvfit_spam_ker)
 ```
 
@@ -315,7 +315,7 @@ plot(cvfit_spam_ker)
 
 # Conclusion
 
-The **roclab** package implements ROC optimizing binary classifiers through
+The **roclab** package implements ROC-Optimizing Binary Classifiers through
 both **linear models** (with regularization penalties) and **kernel models**
 (with various kernel functions). It supports multiple surrogate loss functions
 and incorporates scalable options to efficiently handle large datasets.

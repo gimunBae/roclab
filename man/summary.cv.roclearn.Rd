@@ -28,10 +28,9 @@ deviation of cross-validated AUC, and a truncated table of AUC results
 across candidate \eqn{\lambda} values.
 }
 \examples{
-\donttest{
 set.seed(123)
 
-n <- 1500
+n <- 100
 n_pos <- round(0.2 * n)
 n_neg <- n - n_pos
 X <- rbind(
@@ -42,10 +41,9 @@ y <- c(rep(-1, n_neg), rep(1, n_pos))
 
 cvfit <- cv.roclearn(
   X, y,
-  lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
-  nfolds = 5
+  lambda.vec = exp(seq(log(0.01), log(5), length.out = 3)),
+  approx=TRUE, nfolds = 2
 )
 
 summary(cvfit)
-}
 }

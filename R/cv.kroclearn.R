@@ -52,9 +52,8 @@
 #' @seealso \code{\link{kroclearn}}
 #'
 #' @examples
-#' \donttest{
 #' set.seed(123)
-#' n <- 1500
+#' n <- 100
 #' r <- sqrt(runif(n, 0.05, 1))
 #' theta <- runif(n, 0, 2*pi)
 #' X <- cbind(r * cos(theta), r * sin(theta))
@@ -62,12 +61,11 @@
 #'
 #' cvfit <- cv.kroclearn(
 #'   X, y,
-#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
+#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 3)),
 #'   kernel = "radial",
-#'   nfolds = 5
+#'   approx=TRUE, nfolds = 2
 #' )
 #' cvfit$optimal.lambda
-#' }
 cv.kroclearn <- function(
     X, y,
     lambda.vec = NULL,
@@ -301,8 +299,8 @@ cv.kroclearn <- function(
   auc.sd    <- apply(auc.result, 2, sd, na.rm=TRUE)
   # --- Report excluded (non-converged) lambdas
   for (l in unique(sort(diverge.lambda))) {
-    message <- paste0("lambda = ", l, " was excluded because the algorithm did not converge.")
-    print(message)
+    msg <- paste0("lambda = ", l, " was excluded because the algorithm did not converge.")
+    message(msg)
   }
   if (all(is.na(auc.mean)))
     stop("The algorithm did not converge for any of the lambda values. Please set 'lambda.vec' to a different range.")

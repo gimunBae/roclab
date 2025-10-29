@@ -19,10 +19,9 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' set.seed(123)
 #'
-#' n <- 1500
+#' n <- 100
 #' r <- sqrt(runif(n, 0.05, 1))
 #' theta <- runif(n, 0, 2*pi)
 #' X <- cbind(r * cos(theta), r * sin(theta))
@@ -30,13 +29,12 @@
 #'
 #' cvfit <- cv.kroclearn(
 #'   X, y,
-#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
+#'   lambda.vec = exp(seq(log(0.01), log(5), length.out = 3)),
 #'   kernel = "radial",
-#'   nfolds = 5
+#'   approx=TRUE, nfolds = 2
 #' )
 #'
 #' summary(cvfit)
-#' }
 summary.cv.kroclearn <- function(object, ...) {
   if (!inherits(object, "cv.kroclearn"))
     stop("object must be of class 'cv.kroclearn'.", call. = FALSE)

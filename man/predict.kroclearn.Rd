@@ -26,22 +26,20 @@ or raw decision scores if \code{type = "response"}.
 Generate predictions from a fitted kernel model.
 }
 \examples{
-\donttest{
 set.seed(123)
-n <- 1500
+n <- 100
 r <- sqrt(runif(n, 0.05, 1))
 theta <- runif(n, 0, 2*pi)
 X <- cbind(r * cos(theta), r * sin(theta))
 y <- ifelse(r < 0.5, 1, -1)
 
-fit <- kroclearn(X, y, lambda = 0.1, kernel = "radial")
+fit <- kroclearn(X, y, lambda = 0.1, kernel = "radial", approx=TRUE)
 
 # Predict classes {-1, 1}
 predict(fit, X, type = "class")
 
 # Predict decision scores
 predict(fit, X, type = "response")
-}
 }
 \seealso{
 \code{\link{kroclearn}}, \code{\link{cv.kroclearn}}
