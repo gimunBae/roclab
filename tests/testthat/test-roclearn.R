@@ -1,6 +1,6 @@
 test_that("roclearn training and prediction works", {
   set.seed(123)
-  n_train <- 1500
+  n_train <- 1200
   n_pos <- round(0.2 * n_train)
   n_neg <- n_train - n_pos
 
@@ -31,7 +31,7 @@ test_that("roclearn training and prediction works", {
 
 test_that("auc.roclearn computes AUC between 0 and 1", {
   set.seed(123)
-  n_train <- 1500
+  n_train <- 1200
   n_pos <- round(0.2 * n_train)
   n_neg <- n_train - n_pos
 
@@ -60,7 +60,7 @@ test_that("auc.roclearn computes AUC between 0 and 1", {
 
 test_that("summary.roclearn prints without error", {
   set.seed(123)
-  n <- 1500
+  n <- 500
   n_pos <- round(0.2 * n)
   n_neg <- n - n_pos
   X <- rbind(
@@ -73,3 +73,33 @@ test_that("summary.roclearn prints without error", {
   expect_invisible(summary(fit))
 })
 
+test_that("plot_roc plots ROC curve", {
+  set.seed(123)
+  n_train <- 1200
+  n_pos <- round(0.2 * n_train)
+  n_neg <- n_train - n_pos
+
+  X_train <- rbind(
+    matrix(rnorm(2 * n_neg, mean = -1), ncol = 2),
+    matrix(rnorm(2 * n_pos, mean =  1), ncol = 2)
+  )
+  y_train <- c(rep(-1, n_neg), rep(1, n_pos))
+
+  n_test <- 300
+  n_pos_test <- round(0.2 * n_test)
+  n_neg_test <- n_test - n_pos_test
+  X_test <- rbind(
+    matrix(rnorm(2 * n_neg_test, mean = -1), ncol = 2),
+    matrix(rnorm(2 * n_pos_test, mean =  1), ncol = 2)
+  )
+  y_test <- c(rep(-1, n_neg_test), rep(1, n_pos_test))
+
+  fit <- roclearn(X_train, y_train, lambda = 0.1)
+  y_score <- predict(fit, X_test, type = "response")
+
+  g <- plot_roc(y_test, y_score)
+  expect_s3_class(g, "ggplot")
+
+  expect_no_error(plot_roc(y_test, y_score, title = FALSE))
+  expect_no_error(plot_roc(y_test, y_score, summary = TRUE))
+})

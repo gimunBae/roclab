@@ -45,7 +45,7 @@ set.seed(123)
 # ========================
 # Linear model example
 # ========================
-n_lin <- 1500
+n_lin <- 1200
 n_pos_lin <- round(0.2 * n_lin)
 n_neg_lin <- n_lin - n_pos_lin
 
@@ -73,8 +73,12 @@ summary(fit_lin)
 # AUC on the test set
 auc(fit_lin, X_test_lin, y_test_lin)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 predict(fit_lin, X_test_lin, type = "class")
+
+# ROC curve on the test set
+y_score_lin <- predict(fit_lin, X_test_lin, type = "response")
+plot_roc(y_test_lin, y_score_lin,summary=TRUE)
 
 # 5-fold CV 
 cvfit_lin <- cv.roclearn(
@@ -93,7 +97,7 @@ plot(cvfit_lin)
 # ========================
 # Kernel model example
 # ========================
-n_ker <- 1500
+n_ker <- 1200
 r_train_ker <- sqrt(runif(n_ker, 0.05, 1))
 theta_train_ker <- runif(n_ker, 0, 2*pi)
 X_train_ker <- cbind(r_train_ker * cos(theta_train_ker), r_train_ker * sin(theta_train_ker))
@@ -114,8 +118,12 @@ summary(fit_ker)
 # AUC on the test set
 auc(fit_ker, X_test_ker, y_test_ker)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 predict(fit_ker, X_test_ker, type = "class")
+
+# ROC curve on the test set
+y_score_ker <- predict(fit_ker, X_test_ker, type = "response")
+plot_roc(y_test_ker, y_score_ker,summary=TRUE)
 
 # 5-fold CV 
 cvfit_ker <- cv.kroclearn(
@@ -141,4 +149,4 @@ License: MIT (see [LICENSE](LICENSE) file).
 If you use this package in academic work, please cite as:
 
 Bae, G., & Shin, S. J. (2025). *roclab: ROC-Optimizing Binary Classifiers*.
-R package version 0.1.0. Available at: https://github.com/gimunBae/roclab
+R package version 0.1.4. Available at: https://github.com/gimunBae/roclab

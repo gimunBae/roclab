@@ -9,6 +9,8 @@
 #' @importFrom rsample vfold_cv
 #' @importFrom dplyr select
 #' @importFrom caret createFolds
+#' @importFrom pROC roc auc ggroc
+#' @importFrom ggplot2 ggtitle element_text
 NULL
 #' Fit a linear model
 #'

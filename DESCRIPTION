@@ -1,6 +1,6 @@
 Package: roclab
 Title: ROC-Optimizing Binary Classifiers
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: 
     c(
       person("Gimun", "Bae", 
@@ -33,7 +33,8 @@ Imports:
     pracma,
     rsample,
     dplyr,
-    caret
+    caret,
+    pROC
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 

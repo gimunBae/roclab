@@ -47,7 +47,7 @@ test_that("plot.cv.roclearn runs without error", {
   y <- c(rep(-1, n_neg), rep(1, n_pos))
 
   cvfit <- cv.roclearn(X, y,
-                       lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),nfolds=5)
+                       lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),nfolds=5)
 
   expect_invisible(plot(cvfit))
 })

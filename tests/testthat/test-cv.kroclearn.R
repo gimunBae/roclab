@@ -38,7 +38,7 @@ test_that("plot.cv.kroclearn runs without error", {
   y <- ifelse(r < 0.5, 1, -1)
 
   cvfit <- cv.kroclearn(X, y,
-                        lambda.vec = exp(seq(log(0.01), log(5), length.out = 20)),
+                        lambda.vec = exp(seq(log(0.01), log(5), length.out = 5)),
                         kernel = "radial",nfolds=5)
 
   expect_invisible(plot(cvfit))

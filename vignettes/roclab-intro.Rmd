@@ -48,9 +48,9 @@ with an Adamax adaptive learning rate scheme** is employed.
 # Example: Linear Model
 ```{r}
 set.seed(123)
-n_lin <- 1500
-n_pos_lin <- round(0.2 * n_lin)
-n_neg_lin <- n_lin - n_pos_lin
+n_lin_train <- 1200
+n_pos_lin <- round(0.2 * n_lin_train )
+n_neg_lin <- n_lin_train  - n_pos_lin
 
 X_train_lin <- rbind(
   matrix(rnorm(2 * n_neg_lin, mean = -1), ncol = 2),
@@ -73,23 +73,26 @@ X_test_lin <- rbind(
 )
 y_test_lin <- c(rep(-1, n_neg_test_lin), rep(1, n_pos_test_lin))
 
-# Predict decision scores
+# Predict decision scores on the test set
 pred_score_lin <- predict(fit_lin, X_test_lin, type = "response")
 head(pred_score_lin)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 pred_class_lin <- predict(fit_lin, X_test_lin, type = "class")
 head(pred_class_lin)
 
 # AUC on the test set
 auc(fit_lin, X_test_lin, y_test_lin)
+
+# Plot ROC curve on the test set
+plot_roc(y_test_lin, pred_score_lin)
 ```
 
 
 # Example: Kernel Model
 ```{r}
 set.seed(123)
-n_ker <- 1500
+n_ker <- 1200
 r_train_ker <- sqrt(runif(n_ker, 0.05, 1))
 theta_train_ker <- runif(n_ker, 0, 2*pi)
 X_train_ker <- cbind(r_train_ker * cos(theta_train_ker), r_train_ker * sin(theta_train_ker))
@@ -107,16 +110,19 @@ theta_test_ker <- runif(n_test_ker, 0, 2*pi)
 X_test_ker <- cbind(r_test_ker * cos(theta_test_ker), r_test_ker * sin(theta_test_ker))
 y_test_ker <- ifelse(r_test_ker < 0.5, 1, -1)
 
-# Predict decision scores
+# Predict decision scores on the test set
 pred_score_ker <- predict(fit_ker, X_test_ker, type = "response")
 head(pred_score_ker)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 pred_class_ker <- predict(fit_ker, X_test_ker, type = "class")
 head(pred_class_ker)
 
 # AUC on the test set
 auc(fit_ker, X_test_ker, y_test_ker)
+
+# Plot ROC curve on the test set
+plot_roc(y_test_ker, pred_score_ker)
 ```
 
 
@@ -177,16 +183,19 @@ y_test_iono  <- y_iono[-train_idx]
 fit_iono_lin <- roclearn(X_train_iono, y_train_iono, lambda = 0.1, approx=TRUE)
 summary(fit_iono_lin)
 
-# Predict decision scores
+# Predict decision scores on the test set
 pred_score_iono_lin <- predict(fit_iono_lin, X_test_iono, type = "response")
 head(pred_score_iono_lin)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 pred_class_iono_lin <- predict(fit_iono_lin, X_test_iono, type = "class")
 head(pred_class_iono_lin)
 
 # AUC on the test set
 auc(fit_iono_lin, X_test_iono, y_test_iono)
+
+# Plot ROC curve on the test set
+plot_roc(y_test_iono, pred_score_iono_lin)
 ```
 
 ```{r}
@@ -208,16 +217,19 @@ plot(cvfit_iono_lin)
 fit_iono_ker <- kroclearn(X_train_iono, y_train_iono, lambda = 0.1, kernel = "radial", approx=TRUE)
 summary(fit_iono_ker)
 
-# Predict decision scores
+# Predict decision scores on the test set
 pred_score_iono_ker <- predict(fit_iono_ker, X_test_iono, type = "response")
 head(pred_score_iono_ker)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 pred_class_iono_ker <- predict(fit_iono_ker, X_test_iono, type = "class")
 head(pred_class_iono_ker)
 
 # AUC on the test set
 auc(fit_iono_ker, X_test_iono, y_test_iono)
+
+# Plot ROC curve on the test set
+plot_roc(y_test_iono, pred_score_iono_ker)
 ```
 
 ```{r}
@@ -256,16 +268,19 @@ y_test_spam  <- y_spam[-train_idx]
 fit_spam_lin <- roclearn(X_train_spam, y_train_spam, lambda = 0.1)
 summary(fit_spam_lin)
 
-# Predict decision scores
+# Predict decision scores on the test set
 pred_score_spam_lin <- predict(fit_spam_lin, X_test_spam, type = "response")
 head(pred_score_spam_lin)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 pred_class_spam_lin <- predict(fit_spam_lin, X_test_spam, type = "class")
 head(pred_class_spam_lin)
 
 # AUC on the test set
 auc(fit_spam_lin, X_test_spam, y_test_spam)
+
+# Plot ROC curve on the test set
+plot_roc(y_test_spam, pred_score_spam_lin)
 ```
 
 ```{r}
@@ -286,16 +301,19 @@ plot(cvfit_spam_lin)
 fit_spam_ker <- kroclearn(X_train_spam, y_train_spam, lambda = 0.1, kernel = "radial")
 summary(fit_spam_ker)
 
-# Predict decision scores
+# Predict decision scores on the test set
 pred_score_spam_ker <- predict(fit_spam_ker, X_test_spam, type = "response")
 head(pred_score_spam_ker)
 
-# Predict classes {-1, 1}
+# Predict classes {-1, 1} on the test set
 pred_class_spam_ker <- predict(fit_spam_ker, X_test_spam, type = "class")
 head(pred_class_spam_ker)
 
 # AUC on the test set
 auc(fit_spam_ker, X_test_spam, y_test_spam)
+
+# Plot ROC curve on the test set
+plot_roc(y_test_spam, pred_score_spam_ker)
 ```
 
 ```{r}
