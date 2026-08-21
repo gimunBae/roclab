@@ -148,5 +148,5 @@ License: MIT (see [LICENSE](LICENSE) file).
 
 If you use this package in academic work, please cite as:
 
-Bae, G., & Shin, S. J. (2025). *roclab: ROC-Optimizing Binary Classifiers*.
-R package version 0.1.4. Available at: https://github.com/gimunBae/roclab
+Bae, G., & Shin, S. J. (2026). *roclab: An R package for ROC-optimizing binary classification*.
+SoftwareX, 34, 102709. Available at: https://doi.org/10.1016/j.softx.2026.102709
